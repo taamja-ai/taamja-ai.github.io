@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taam Ja' LLC | Deep Learning For Humans</title>
+
+    <!-- Open Graph / Social Preview -->
+    <meta property="og:title" content="Taam Ja' LLC | Deep Learning For Humans">
+    <meta property="og:description" content="Capability elicitation for closed-source models and human learners. Design the right context to unlock what's already there.">
+    <meta property="og:url" content="https://taamja.ai">
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<link rel="icon" href="favicon.ico">
+    <style>
+        :root {
+            --bg-deep: #020817;
+            --text-main: #f0f4ff;
+            --text-muted: #7a8aaa;
+            --accent-blue: #38bdf8;
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-hover: rgba(56, 189, 248, 0.12);
+            --hero-shift: -10vh;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { width: 100%; height: 100%; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        /* Background and overlay locked to viewport */
+        .background-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: url('taamja-blue-hole-background.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        /* BUBBLES CANVAS — only addition to original */
+        #bubbles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: radial-gradient(ellipse at center,
+                rgba(2,8,23,0.2) 0%,
+                rgba(2,8,23,0.45) 65%,
+                rgba(2,8,23,0.85) 100%);
+            z-index: 3;
+        }
+
+        /* Full viewport centering wrapper */
+        .page {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        /* Content block — shifted up from center */
+        main {
+            text-align: center;
+            width: 100%;
+            max-width: 780px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateY(var(--hero-shift));
+            animation: fadeUp 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* Logo */
+        .logo-wrap {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .logo-wrap::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 64%;
+            width: 190px;
+            height: 130px;
+            transform: translateX(-50%);
+            background: radial-gradient(ellipse at top,
+                rgba(56, 189, 248, 0.42) 0%,
+                rgba(56, 189, 248, 0.2) 28%,
+                rgba(56, 189, 248, 0.0) 74%);
+            filter: blur(7px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .logo-wrap img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 14px rgba(56,189,248,0.55))
+                    drop-shadow(0 12px 24px rgba(56,189,248,0.42))
+                    drop-shadow(0 26px 44px rgba(56,189,248,0.2));
+        }
+
+        /* Wordmark */
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 4.2rem);
+            font-weight: 300;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.35rem;
+            white-space: nowrap;
+        }
+
+        h2 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: clamp(0.65rem, 1.2vw, 0.95rem);
+            font-weight: 400;
+            letter-spacing: 0.28em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            white-space: nowrap;
+        }
+
+        /* Divider */
+        .divider {
+            width: 44px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            margin: 0 auto 1.8rem;
+        }
+
+        /* Body Copy */
+        .tagline {
+            font-size: clamp(0.88rem, 1.5vw, 1.1rem);
+            font-weight: 300;
+            color: #c8d4e8;
+            line-height: 1.75;
+            max-width: 620px;
+            margin-bottom: 1rem;
+        }
+
+        .triad {
+            font-size: clamp(0.75rem, 1.2vw, 0.92rem);
+            font-weight: 500;
+            color: var(--accent-blue);
+            letter-spacing: 0.04em;
+            text-shadow: 0 0 20px rgba(56,189,248,0.3);
+            margin-bottom: 2rem;
+            white-space: nowrap;
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.62rem 1.25rem;
+            border-radius: 4px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            justify-content: center;
+            min-height: 54px;
+            flex: 1 1 0;
+        }
+
+        .btn:hover {
+            background: var(--glass-hover);
+            border-color: rgba(56,189,248,0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.25),
+                        0 0 0 1px rgba(56,189,248,0.15);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 3px;
+            border-color: rgba(56,189,248,0.7);
+            box-shadow: 0 0 0 4px rgba(56,189,248,0.22);
+        }
+
+        .btn i { font-size: 1rem; opacity: 0.85; }
+
+        .btn-subtext {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            line-height: 1.35;
+        }
+
+        .btn-subtext .sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            text-transform: none;
+        }
+
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 0; right: 0;
+            text-align: center;
+            z-index: 20;
+            font-size: 0.72rem;
+            color: #3a4a62;
+            letter-spacing: 0.06em;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(calc(var(--hero-shift) + 22px)); }
+            to   { opacity: 1; transform: translateY(var(--hero-shift)); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            main { animation: none; }
+            .btn:hover { transform: none; }
+        }
+
+        @media (prefers-contrast: more) {
+            .btn {
+                border-color: rgba(255,255,255,0.45);
+                background: rgba(8, 18, 42, 0.72);
+            }
+            .btn-subtext .sub { color: #9cb5db; }
+        }
+
+        /* Lift content more on large desktop viewports */
+        @media (min-width: 1800px) and (min-height: 900px) {
+            :root { --hero-shift: -15vh; }
+        }
+
+        /* Large-screen readability pass: closer to 4K 150% feel at 100% */
+        @media (min-width: 1500px) and (min-height: 850px) {
+            h1 {
+                font-size: clamp(2.25rem, 4.6vw, 4.6rem);
+                letter-spacing: 0.16em;
+            }
+            h2 { font-size: clamp(0.72rem, 1.05vw, 1.06rem); }
+            .tagline {
+                font-size: clamp(0.96rem, 1.05vw, 1.2rem);
+                max-width: 680px;
+            }
+            .triad { font-size: clamp(0.82rem, 0.9vw, 1rem); }
+            .btn-container {
+                gap: 1.25rem;
+                max-width: 600px;
+            }
+            .btn { font-size: 0.82rem; }
+        }
+
+        /* Short viewport / high zoom mode: allow scrolling, avoid footer overlap */
+        @media (max-height: 760px) {
+            :root { --hero-shift: 0vh; }
+            body {
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                min-height: 100dvh;
+            }
+            .page {
+                position: relative;
+                min-height: 0;
+                height: auto;
+                justify-content: flex-start;
+                flex: 1 0 auto;
+                padding: 1rem 0 0.25rem;
+            }
+            main { padding: 1rem 1.25rem; }
+            footer {
+                position: relative;
+                z-index: 20;
+                flex: 0 0 auto;
+                padding: 0.75rem 0 1rem;
+            }
+            .btn-container {
+                flex-wrap: wrap;
+                max-width: 520px;
+            }
+            .btn {
+                min-width: 230px;
+                flex: 1 1 230px;
+            }
+        }
+
+        /* Responsive: phones and narrow windows */
+        @media (max-width: 640px) {
+            :root { --hero-shift: -1vh; }
+            body { overflow-y: auto; }
+            .page {
+                position: relative;
+                min-height: 0;
+                height: auto;
+                justify-content: flex-start;
+                padding: 1rem 0 0.25rem;
+            }
+            main { padding: 1rem; }
+            h1 { white-space: normal; font-size: clamp(1.8rem, 8vw, 3rem); }
+            h2 { white-space: normal; font-size: 0.7rem; letter-spacing: 0.2em; }
+            .triad { white-space: normal; font-size: 0.78rem; }
+            .btn-container { flex-wrap: wrap; gap: 0.75rem; max-width: 360px; }
+            .btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.75rem;
+                width: 100%;
+                min-width: 100%;
+                flex: 1 1 100%;
+            }
+            .logo-wrap img { width: 80px; height: 80px; }
+            footer {
+                position: relative;
+                z-index: 20;
+                padding: 0.75rem 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-layer"></div>
+
+    <!-- BUBBLES CANVAS — only addition to original -->
+    <canvas id="bubbles-canvas"></canvas>
+
+    <div class="overlay"></div>
+
+    <div class="page">
+        <main>
+            <div class="logo-wrap">
+                <img src="bluehole-small.png" alt="Taam Ja' LLC logo">
+            </div>
+
+            <h1>Taam Ja' LLC</h1>
+            <h2>Deep Learning For Humans</h2>
+
+            <div class="divider"></div>
+
+            <p class="tagline">
+                Capability elicitation for closed-source models and human learners alike.<br>
+                Design the right context to unlock what's already there &mdash;<br>
+                not by changing the system, but by eliciting it.
+            </p>
+
+            <div class="triad">
+                Pedagogically sound &nbsp;&middot;&nbsp; Neurologically aligned &nbsp;&middot;&nbsp; Empirically validated
+            </div>
+
+            <div class="btn-container">
+                <a href="https://github.com/taamja-ai" class="btn" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github"></i>
+                    <span>View on GitHub</span>
+                </a>
+
+                <a href="mailto:info@taamja.ai" class="btn">
+                    <i class="far fa-envelope"></i>
+                    <div class="btn-subtext">
+                        <span>Contact Us</span>
+                        <span class="sub">info&#64;taamja.ai</span>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        &copy; 2024&ndash;2026 Taam Ja&#39; LLC. All rights reserved.
+    </footer>
+
+    <script>
+    (function () {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        const canvas = document.getElementById('bubbles-canvas');
+        const ctx    = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // 40 tiny motes — slow upward drift, gentle sway, soft pulse
+        const motes = Array.from({ length: 40 }, () => ({
+            x:      Math.random(),
+            y:      Math.random(),
+            r:      0.5 + Math.random() * 1.5,
+            speed:  0.000030 + Math.random() * 0.000060,
+            drift:  (Math.random() - 0.5) * 0.000030,
+            baseOp: 0.14     + Math.random() * 0.20,
+            phase:  Math.random() * Math.PI * 2,
+        }));
+
+        function animate(now) {
+            canvas.width = canvas.width; // clear
+            const W = canvas.width, H = canvas.height;
+
+            motes.forEach(m => {
+                m.y -= m.speed;
+                m.x += m.drift + Math.sin(now * 0.00026 + m.phase) * 0.000060;
+                if (m.y < -0.02) { m.y = 1.02; m.x = Math.random(); }
+                if (m.x < 0) m.x = 1;
+                if (m.x > 1) m.x = 0;
+
+                const pulse = 0.4 + 0.6 * Math.sin(now * 0.0010 + m.phase);
+                ctx.beginPath();
+                ctx.arc(m.x * W, m.y * H, m.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(120, 215, 255, ${m.baseOp * pulse})`;
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+    })();
+    </script>
+
+</body>
+</html>
