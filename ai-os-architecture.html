@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise AI Operating System Architecture | Taam Ja' LLC</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&family=Rajdhani:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.ico">
+<style>
+  :root {
+    --deep: #020d1a;
+    --ocean: #041628;
+    --glow-blue: #4ab3e8;
+    --ring-blue: #2a7bb5;
+    --accent: #7dd4f7;
+    --soft: #a8d8f0;
+    --text: #c8dde8;
+    --dim: #6a899a;
+    --gold: #c9a84c;
+    --white: #e8f4fa;
+    --green: #4ae8a0;
+    --purple: #a78bfa;
+    --orange: #f59e42;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px; height: 900px;
+    background: radial-gradient(ellipse at center,
+      rgba(42,123,181,0.06) 0%,
+      rgba(4,22,40,0.04) 40%,
+      transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: breathe 8s ease-in-out infinite;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 80%, rgba(10,40,70,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 80% 20%, rgba(5,25,50,0.2) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #bubbles-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%,-50%) scale(1.08); opacity: 1; }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 60px 40px 100px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav-back {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    z-index: 100;
+  }
+
+  .nav-back a {
+    color: rgba(200,221,232,0.7);
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid rgba(74,179,232,0.12);
+    background: rgba(4,22,40,0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  .nav-back a:hover {
+    color: #7dd4f7;
+    border-color: rgba(74,179,232,0.3);
+    background: rgba(74,179,232,0.07);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 12px rgba(74,179,232,0.08);
+  }
+
+  /* ─── HEADER ──────────────────────────────── */
+  header {
+    text-align: center;
+    margin-bottom: 70px;
+    animation: fadeDown 1s ease both;
+  }
+
+  .logo-wrap {
+    margin: 0 auto 34px;
+    position: relative;
+    width: 100px; height: 100px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+    border: 1px solid rgba(56,189,248,0.22);
+    animation: orbRingOuter 5s ease-in-out infinite;
+  }
+
+  .logo-wrap::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(56,189,248,0.45);
+    box-shadow: 0 0 18px rgba(56,189,248,0.25), inset 0 0 18px rgba(56,189,248,0.08);
+    animation: orbRingInner 5s ease-in-out infinite;
+  }
+
+  .orb-glow {
+    position: absolute;
+    inset: -30px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center,
+      rgba(56,189,248,0.30) 0%,
+      rgba(56,189,248,0.12) 40%,
+      transparent 70%);
+    filter: blur(10px);
+    animation: orbGlow 5s ease-in-out infinite;
+    pointer-events: none; z-index: 0;
+  }
+
+  .logo-wrap img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    filter:
+      drop-shadow(0 0 10px rgba(56,189,248,0.65))
+      drop-shadow(0 0 28px rgba(56,189,248,0.35))
+      drop-shadow(0 18px 36px rgba(56,189,248,0.2));
+    animation: logoBreath 5s ease-in-out infinite;
+  }
+
+  @keyframes orbRingOuter { 0%,100% { transform: scale(1); opacity:0.3; } 50% { transform:scale(1.18); opacity:0.7; } }
+  @keyframes orbRingInner { 0%,100% { transform: scale(1); opacity:0.55; } 50% { transform:scale(1.08); opacity:1; } }
+  @keyframes orbGlow       { 0%,100% { opacity:0.55; transform:scale(1); } 50% { opacity:1; transform:scale(1.12); } }
+  @keyframes logoBreath {
+    0%, 100% {
+      filter: drop-shadow(0 0 10px rgba(56,189,248,0.65))
+              drop-shadow(0 0 28px rgba(56,189,248,0.35))
+              drop-shadow(0 18px 36px rgba(56,189,248,0.2));
+    }
+    50% {
+      filter: drop-shadow(0 0 18px rgba(56,189,248,0.9))
+              drop-shadow(0 0 50px rgba(56,189,248,0.55))
+              drop-shadow(0 20px 44px rgba(56,189,248,0.3));
+    }
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.3em;
+    color: var(--glow-blue);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--dim);
+  }
+
+  .divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glow-blue), transparent);
+    margin: 20px auto;
+  }
+
+  /* ─── SECTION HEADERS ─────────────────────── */
+  .section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--white);
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── FLOW DIAGRAM ────────────────────────── */
+  .flow-section { margin-bottom: 80px; animation: fadeUp 1s 0.2s ease both; }
+
+  .flow-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .flow-node {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(4,22,40,0.7);
+    border: 1px solid rgba(74,179,232,0.15);
+    border-radius: 3px;
+    padding: 16px 26px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .flow-node::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,179,232,0.4), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  .flow-node:hover::before { opacity: 1; }
+  .flow-node:hover {
+    border-color: rgba(74,179,232,0.35);
+    background: rgba(4,22,40,0.9);
+    transform: translateY(-1px);
+  }
+
+  /* accent colours per pillar type */
+  .fn-security  { border-left: 2px solid rgba(74,179,232,0.5); }
+  .fn-cognitive { border-left: 2px solid rgba(125,212,247,0.5); }
+  .fn-orch      { border-left: 2px solid rgba(201,168,76,0.5); }
+  .fn-event     { border-left: 2px solid rgba(167,139,250,0.5); }
+  .fn-inference { border-left: 2px solid rgba(74,179,232,0.4); }
+  .fn-memory    { border-left: 2px solid rgba(74,232,160,0.5); }
+  .fn-identity  { border-left: 2px solid rgba(245,158,66,0.5); }
+  .fn-sandbox   { border-left: 2px solid rgba(245,100,66,0.5); }
+  .fn-tool      { border-left: 2px solid rgba(74,179,232,0.3); }
+  .fn-data      { border-left: 2px solid rgba(74,232,160,0.3); }
+  .fn-obs       { border-left: 2px solid rgba(167,139,250,0.4); }
+  .fn-eval      { border-left: 2px solid rgba(201,168,76,0.4); }
+  .fn-worker    { border-left: 2px solid rgba(74,179,232,0.4); }
+  .fn-proto     { border-left: 2px solid rgba(125,212,247,0.4); }
+  .fn-client    { border-left: none; background: rgba(74,179,232,0.03); max-width: 700px; }
+
+  .fn-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(168,216,240,0.78);
+    margin-bottom: 3px;
+  }
+
+  .fn-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .fn-desc {
+    font-size: 0.74rem;
+    color: var(--dim);
+    line-height: 1.55;
+  }
+
+  .flow-arrow {
+    width: 1px; height: 26px;
+    background: linear-gradient(180deg, rgba(74,179,232,0.5), rgba(74,179,232,0.15));
+    position: relative;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+
+  .flow-arrow::after {
+    content: '▼';
+    font-size: 0.55rem;
+    color: rgba(74,179,232,0.45);
+    position: absolute;
+    bottom: -6px;
+  }
+
+  .flow-branch {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .flow-branch-node {
+    background: rgba(4,22,40,0.7);
+    border: 1px solid rgba(74,179,232,0.12);
+    border-radius: 3px;
+    padding: 12px 14px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .flow-branch-node:hover {
+    border-color: rgba(74,179,232,0.3);
+    background: rgba(4,22,40,0.9);
+  }
+
+  .flow-branch-node .fn-title { font-size: 0.78rem; margin-bottom: 3px; }
+  .flow-branch-node .fn-desc  { font-size: 0.65rem; }
+
+  /* ─── PILLARS GRID ────────────────────────── */
+  .pillars-section { margin-bottom: 80px; animation: fadeUp 1s 0.3s ease both; }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+  }
+
+  .pillar-card {
+    background: rgba(4,22,40,0.7);
+    border: 1px solid rgba(74,179,232,0.12);
+    border-radius: 3px;
+    padding: 20px 22px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,179,232,0.4), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  .pillar-card:hover::before { opacity: 1; }
+  .pillar-card:hover {
+    border-color: rgba(74,179,232,0.28);
+    background: rgba(4,22,40,0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  /* NEW pillar indicator */
+  .pillar-card.new-pillar {
+    border-color: rgba(167,139,250,0.2);
+  }
+
+  .pillar-card.new-pillar::after {
+    content: 'NEW';
+    position: absolute;
+    top: 12px; right: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--purple);
+    border: 1px solid rgba(167,139,250,0.35);
+    padding: 2px 6px;
+    border-radius: 1px;
+  }
+
+  .pillar-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+    margin-bottom: 5px;
+  }
+
+  .pillar-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--glow-blue);
+    margin-bottom: 8px;
+  }
+
+  .pillar-card.new-pillar .pillar-name { color: var(--purple); }
+
+  .pillar-component {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--white);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .pillar-desc {
+    font-size: 0.78rem;
+    color: var(--dim);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .pattern-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .ptag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 1px;
+    background: rgba(74,179,232,0.06);
+    border: 1px solid rgba(74,179,232,0.18);
+    color: var(--soft);
+    white-space: normal;
+  }
+
+  .ptag.highlight {
+    background: rgba(74,179,232,0.12);
+    border-color: rgba(74,179,232,0.4);
+    color: var(--accent);
+  }
+
+  .ptag.new {
+    background: rgba(167,139,250,0.08);
+    border-color: rgba(167,139,250,0.3);
+    color: var(--purple);
+  }
+
+  /* ─── ARCHITECTURE DIAGRAM ────────────────── */
+  .arch-section { margin-bottom: 80px; animation: fadeUp 1s 0.4s ease both; }
+
+  .arch-diagram {
+    background: rgba(2,8,16,0.92);
+    border: 1px solid rgba(74,179,232,0.15);
+    border-radius: 3px;
+    padding: 36px;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .arch-diagram::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,179,232,0.5), transparent);
+  }
+
+  .arch-diagram pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    line-height: 1.65;
+    color: var(--text);
+    white-space: pre;
+  }
+
+  /* ─── META-PATTERNS TABLES ────────────────── */
+  .tables-section { margin-bottom: 80px; animation: fadeUp 1s 0.5s ease both; }
+
+  .tables-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .table-wrap {
+    background: rgba(4,22,40,0.7);
+    border: 1px solid rgba(74,179,232,0.12);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .table-title {
+    font-size: 0.66rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dim);
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid rgba(74,179,232,0.08);
+  }
+
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+
+  .data-table th {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--glow-blue);
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(74,179,232,0.18);
+    text-align: left;
+    background: rgba(74,179,232,0.04);
+  }
+
+  .data-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(74,179,232,0.06);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .data-table td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .data-table tr:hover td { background: rgba(74,179,232,0.04); }
+
+  /* ─── INVARIANTS ──────────────────────────── */
+  .invariants-section { margin-bottom: 80px; animation: fadeUp 1s 0.55s ease both; }
+
+  .invariants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 12px;
+  }
+
+  .invariant-card {
+    background: rgba(4,22,40,0.6);
+    border: 1px solid rgba(74,179,232,0.1);
+    border-radius: 3px;
+    padding: 18px 16px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .invariant-card:hover {
+    border-color: rgba(74,179,232,0.3);
+    box-shadow: 0 0 20px rgba(74,179,232,0.08);
+  }
+
+  .inv-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: rgba(74,179,232,0.2);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .inv-title {
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  .inv-meaning {
+    font-size: 0.74rem;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  .inv-tech {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--glow-blue);
+    margin-top: 6px;
+  }
+
+  /* ─── ENTERPRISE MAPPING ──────────────────── */
+  .mapping-section { margin-bottom: 80px; animation: fadeUp 1s 0.6s ease both; }
+  .governance-section { margin-bottom: 80px; animation: fadeUp 1s 0.62s ease both; }
+  .security-section { margin-bottom: 80px; animation: fadeUp 1s 0.64s ease both; }
+
+  .mapping-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 12px;
+  }
+
+  .mapping-card {
+    background: rgba(4,22,40,0.7);
+    border: 1px solid rgba(74,179,232,0.1);
+    border-radius: 3px;
+    padding: 16px 18px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mapping-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(180deg, var(--glow-blue), transparent);
+    opacity: 0.5;
+  }
+
+  .mapping-card:hover {
+    border-color: rgba(74,179,232,0.25);
+    background: rgba(4,22,40,0.9);
+  }
+
+  .mapping-req {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--glow-blue);
+    margin-bottom: 5px;
+  }
+
+  .mapping-layer {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.98rem;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .mapping-desc {
+    font-size: 0.74rem;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  /* ─── PATTERN CLOUD ───────────────────────── */
+  .patterns-section { margin-bottom: 80px; animation: fadeUp 1s 0.65s ease both; }
+
+  .pattern-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    justify-content: center;
+  }
+
+  .pcloud-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    padding: 5px 13px;
+    border-radius: 2px;
+    background: rgba(74,179,232,0.05);
+    border: 1px solid rgba(74,179,232,0.14);
+    color: var(--soft);
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .pcloud-tag:hover {
+    background: rgba(74,179,232,0.12);
+    border-color: rgba(74,179,232,0.45);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .pcloud-tag.new {
+    background: rgba(167,139,250,0.05);
+    border-color: rgba(167,139,250,0.2);
+    color: rgba(167,139,250,0.8);
+  }
+
+  .pcloud-tag.new:hover {
+    background: rgba(167,139,250,0.12);
+    border-color: rgba(167,139,250,0.5);
+    color: var(--purple);
+  }
+
+  .matrix-note {
+    margin-top: 12px;
+    font-size: 0.74rem;
+    color: var(--dim);
+    line-height: 1.55;
+  }
+
+  .pattern-count {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+  }
+
+  .references-section { margin-bottom: 80px; animation: fadeUp 1s 0.66s ease both; }
+
+  .references-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .reference-item {
+    background: rgba(4,22,40,0.62);
+    border: 1px solid rgba(74,179,232,0.12);
+    border-radius: 3px;
+    padding: 12px 14px;
+    line-height: 1.55;
+    font-size: 0.76rem;
+    color: var(--text);
+  }
+
+  .reference-item a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(125,212,247,0.35);
+  }
+
+  .reference-item a:hover {
+    color: var(--white);
+    border-bottom-color: rgba(232,244,250,0.6);
+  }
+
+  .reference-item a:focus-visible {
+    outline: 2px solid rgba(125,212,247,0.8);
+    outline-offset: 2px;
+  }
+
+  /* ─── FOOTER ──────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 60px 0 20px;
+    border-top: 1px solid rgba(74,179,232,0.08);
+    animation: fadeUp 1s 0.7s ease both;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin: 16px 0 4px;
+  }
+
+  .footer-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+
+  .footer-meta {
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    line-height: 1.5;
+  }
+
+  .footer-copy {
+    margin-top: 10px;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: rgba(168, 216, 240, 0.42);
+    line-height: 1.45;
+  }
+
+  footer .logo-wrap {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 12px;
+  }
+
+  footer .logo-wrap::before {
+    inset: -5px;
+  }
+
+  footer .logo-wrap::after {
+    inset: -2px;
+    border-width: 1px;
+    box-shadow:
+      0 0 10px rgba(56, 189, 248, 0.22),
+      inset 0 0 8px rgba(56, 189, 248, 0.08);
+  }
+
+  footer .orb-glow {
+    inset: -12px;
+    filter: blur(6px);
+  }
+
+  footer .logo-wrap img {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* ─── SCORE BADGE ─────────────────────────── */
+  .score-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+
+  .score-badge {
+    background: rgba(4,22,40,0.8);
+    border: 1px solid rgba(74,179,232,0.18);
+    border-radius: 3px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 150px;
+  }
+
+  .score-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .score-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+
+  .assumptions-block {
+    margin: 20px auto 0;
+    max-width: 860px;
+    background: rgba(4,22,40,0.58);
+    border: 1px solid rgba(74,179,232,0.14);
+    border-radius: 3px;
+    padding: 14px 16px;
+    text-align: left;
+  }
+
+  .assumptions-title {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .assumptions-list {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .assumptions-list li {
+    font-size: 0.72rem;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  .assumptions-note {
+    margin-top: 8px;
+    font-size: 0.68rem;
+    color: var(--dim);
+    line-height: 1.45;
+  }
+
+  /* ─── RESPONSIVE ──────────────────────────── */
+  @media (max-width: 980px) {
+    .container { padding: 48px 28px 80px; }
+    .arch-diagram pre { font-size: 0.64rem; }
+  }
+
+  @media (max-width: 700px) {
+    h1 { font-size: 1.8rem; }
+    .section-title { font-size: 1.26rem; line-height: 1.22; }
+    .tables-grid { grid-template-columns: 1fr; }
+    .flow-branch { grid-template-columns: 1fr; }
+    .flow-node { padding: 14px 16px; }
+    .flow-branch-node { padding: 12px; }
+    .fn-label { font-size: 0.64rem; letter-spacing: 0.2em; }
+    .fn-title { font-size: 0.85rem; letter-spacing: 0.09em; }
+    .fn-desc { font-size: 0.76rem; }
+    .pillars-grid { grid-template-columns: 1fr; }
+    .pillar-card { padding: 18px 16px; }
+    .pillar-name { font-size: 0.86rem; letter-spacing: 0.1em; }
+    .arch-diagram { padding: 14px; }
+    .arch-diagram pre { font-size: 0.56rem; line-height: 1.45; }
+    .table-wrap { overflow-x: auto; }
+    .data-table { min-width: 560px; }
+    .data-table td:first-child { white-space: normal; }
+    .invariants-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mapping-grid { grid-template-columns: 1fr; }
+    .logo-wrap { width: 96px; height: 96px; margin-bottom: 30px; }
+    .logo-wrap img { width: 80px; height: 80px; }
+    .flow-node,
+    .pillar-card,
+    .mapping-card,
+    .invariant-card,
+    .reference-item,
+    .assumptions-block { min-width: 0; }
+    .fn-desc,
+    .pillar-desc,
+    .mapping-desc,
+    .matrix-note,
+    .reference-item,
+    .assumptions-note,
+    .footer-meta,
+    .footer-copy { overflow-wrap: anywhere; word-break: break-word; }
+    .ptag, .pcloud-tag { white-space: normal; line-height: 1.35; overflow-wrap: anywhere; word-break: break-word; }
+    .score-badge { min-width: 136px; padding: 14px 16px; }
+    .score-val { font-size: 1.8rem; }
+    .score-label { font-size: 0.64rem; letter-spacing: 0.18em; }
+    .assumptions-block { padding: 12px; }
+    .assumptions-list li { font-size: 0.74rem; }
+    .container {
+      padding: calc(env(safe-area-inset-top) + 48px) calc(16px + env(safe-area-inset-right)) calc(72px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
+    }
+    .nav-back {
+      position: fixed;
+      top: calc(env(safe-area-inset-top) + 10px);
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+    .nav-back a {
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      white-space: nowrap;
+      padding: 0.42rem 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 100px;
+      border: 1px solid rgba(74,179,232,0.14);
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(16px) saturate(1.4);
+      -webkit-backdrop-filter: blur(16px) saturate(1.4);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset, 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .footer-meta { letter-spacing: 0.07em; }
+    .footer-copy { letter-spacing: 0.04em; }
+  }
+
+  @media (max-width: 480px) {
+    .invariants-grid { grid-template-columns: 1fr; }
+    .score-row { gap: 12px; }
+    .score-badge { width: 100%; max-width: 260px; }
+    .arch-diagram pre { font-size: 0.52rem; line-height: 1.4; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bubbles-canvas"></canvas>
+<div class="nav-back">
+  <a href="index.html">Back to Landing</a>
+</div>
+
+<div class="container">
+
+  <!-- ─── HEADER ─────────────────────────────── -->
+  <header>
+    <div class="logo-wrap">
+      <div class="orb-glow"></div>
+      <img src="bluehole-small.png" alt="Taam Ja' LLC logo">
+    </div>
+    <div class="subtitle">Taam Ja' LLC · Deep Learning For Humans</div>
+    <h1>Enterprise AI Operating System</h1>
+    <div class="divider"></div>
+    <div class="tagline">Principal-level architecture reference — v2.0 — production-oriented blueprint</div>
+
+    <div class="score-row">
+      <div class="score-badge">
+        <div class="score-val">Ref</div>
+        <div class="score-label">Conceptual Clarity</div>
+      </div>
+      <div class="score-badge">
+        <div class="score-val">Ref</div>
+        <div class="score-label">Implementation Depth</div>
+      </div>
+      <div class="score-badge">
+        <div class="score-val">Cond</div>
+        <div class="score-label">Readiness (Conditional)</div>
+      </div>
+    </div>
+
+    <div class="assumptions-block">
+      <div class="assumptions-title">Deployment Assumptions</div>
+      <ul class="assumptions-list">
+        <li>High availability requires multi-zone control plane and failure-tested data stores.</li>
+        <li>Durability depends on backup/restore drills, event retention policies, and replay validation.</li>
+        <li>Security posture depends on policy-as-code, key management, least privilege, and incident response runbooks.</li>
+        <li>Operational readiness assumes SLOs, synthetic checks, on-call ownership, and controlled rollout strategy.</li>
+      </ul>
+      <div class="assumptions-note">This diagram is an architecture reference, not a guarantee of production outcomes without these controls.</div>
+    </div>
+  </header>
+
+
+  <!-- ─── SECTION 01 — FULL REQUEST FLOW ────── -->
+  <section class="flow-section">
+    <div class="section-header">
+      <div class="section-label">Section 01</div>
+      <div class="section-title">Full 14-Layer Cognitive Request Flow</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="flow-diagram">
+
+      <div class="flow-node fn-client">
+        <div class="fn-label">Entry Point</div>
+        <div class="fn-title">Client Layer</div>
+        <div class="fn-desc">Employees &nbsp;·&nbsp; Applications &nbsp;·&nbsp; APIs &nbsp;·&nbsp; External Systems &nbsp;·&nbsp; Autonomous Agents</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-security">
+        <div class="fn-label">Pillar 07</div>
+        <div class="fn-title">AI Gateway / Trust Layer</div>
+        <div class="fn-desc">Auth &nbsp;·&nbsp; PII Redaction &nbsp;·&nbsp; Prompt Filtering &nbsp;·&nbsp; Policy Enforcement &nbsp;·&nbsp; Audit Logging</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-cognitive">
+        <div class="fn-label">Pillar 01</div>
+        <div class="fn-title">Cognitive Kernel</div>
+        <div class="fn-desc">Reasoning &nbsp;·&nbsp; Planning &nbsp;·&nbsp; Decision Making &nbsp;·&nbsp; Working Memory &nbsp;·&nbsp; Verification Engine</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-orch">
+        <div class="fn-label">Pillar 03</div>
+        <div class="fn-title">Orchestration Engine</div>
+        <div class="fn-desc">LangGraph / Temporal &nbsp;·&nbsp; State Machine &nbsp;·&nbsp; Durable Execution &nbsp;·&nbsp; Checkpointing &nbsp;·&nbsp; Human-in-the-Loop</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-event" style="border-color:rgba(167,139,250,0.3);">
+        <div class="fn-label" style="color:var(--purple);">Pillar 09 · NEW</div>
+        <div class="fn-title" style="color:var(--purple);">Event-Sourced Cognitive State Layer</div>
+        <div class="fn-desc">Append-only event log &nbsp;·&nbsp; agent_thought &nbsp;·&nbsp; tool_call &nbsp;·&nbsp; decision &nbsp;·&nbsp; memory_write &nbsp;·&nbsp; Cognitive Lineage &nbsp;·&nbsp; Full Replay</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-inference">
+        <div class="fn-label">Pillar 05</div>
+        <div class="fn-title">Inference Gateway</div>
+        <div class="fn-desc">OpenAI / Anthropic / Gemini / vLLM &nbsp;·&nbsp; Model Routing &nbsp;·&nbsp; Prompt Caching &nbsp;·&nbsp; Fallback &nbsp;·&nbsp; Cost Optimization</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-memory">
+        <div class="fn-label">Pillar 02</div>
+        <div class="fn-title">Memory OS</div>
+        <div class="fn-desc">PostgreSQL + pgvector &nbsp;·&nbsp; Apache AGE (Knowledge Graph) &nbsp;·&nbsp; Episodic Event Log &nbsp;·&nbsp; Semantic Memory</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-identity" style="border-color:rgba(245,158,66,0.35);">
+        <div class="fn-label" style="color:var(--orange);">Pillar 10 · NEW</div>
+        <div class="fn-title" style="color:var(--orange);">Agent Identity & Permission Layer</div>
+        <div class="fn-desc">Agent RBAC &nbsp;·&nbsp; OAuth2 &nbsp;·&nbsp; Agent Identity Registry &nbsp;·&nbsp; Per-agent data access controls</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-sandbox" style="border-color:rgba(245,100,66,0.3);">
+        <div class="fn-label" style="color:#f56642;">Pillar 11 · NEW</div>
+        <div class="fn-title" style="color:#f56642;">Tool Execution Sandbox Layer</div>
+        <div class="fn-desc">Docker / Firecracker / E2B &nbsp;·&nbsp; Isolated execution &nbsp;·&nbsp; Tool calls mediated by sandbox &nbsp;·&nbsp; Permission-gated calls</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <!-- 3-column branch -->
+      <div class="flow-branch">
+        <div class="flow-branch-node">
+          <div class="fn-title">Tool Layer</div>
+          <div class="fn-desc">GitHub · Browser · Email · Internal APIs · Enterprise Services</div>
+        </div>
+        <div class="flow-branch-node">
+          <div class="fn-title">Multi-Agent Coord.</div>
+          <div class="fn-desc">Pillar 06 &nbsp;·&nbsp; Agent-to-Agent &nbsp;·&nbsp; Supervisor-Worker &nbsp;·&nbsp; Shared Memory</div>
+        </div>
+        <div class="flow-branch-node" style="border-color:rgba(125,212,247,0.25);">
+          <div class="fn-title" style="color:var(--accent);">Agent Protocol</div>
+          <div class="fn-desc">Pillar 14 · NEW &nbsp;·&nbsp; MCP (tools/resources context) &nbsp;·&nbsp; A2A (agent task handoff) &nbsp;·&nbsp; Capability Discovery</div>
+        </div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <div class="flow-node fn-data">
+        <div class="fn-label">Pillar 08</div>
+        <div class="fn-title">Enterprise Data Layer</div>
+        <div class="fn-desc">Databases &nbsp;·&nbsp; Warehouses &nbsp;·&nbsp; Documents &nbsp;·&nbsp; ERP &nbsp;·&nbsp; Inventory &nbsp;·&nbsp; Semantic Layer &nbsp;·&nbsp; Data Federation</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <!-- Worker layer -->
+      <div class="flow-node fn-worker">
+        <div class="fn-label" style="color:var(--accent);">Pillar 13 · NEW</div>
+        <div class="fn-title">Distributed Task Queue / Worker Layer</div>
+        <div class="fn-desc">Temporal Workers &nbsp;·&nbsp; Kafka &nbsp;·&nbsp; Task Queues &nbsp;·&nbsp; Async LLM calls &nbsp;·&nbsp; Non-blocking execution</div>
+      </div>
+      <div class="flow-arrow"></div>
+
+      <!-- Observability + Evaluation side by side -->
+      <div class="flow-branch" style="grid-template-columns:1fr 1fr;">
+        <div class="flow-branch-node" style="border-color:rgba(167,139,250,0.2);">
+          <div class="fn-title" style="color:var(--purple);">Observability Layer</div>
+          <div class="fn-desc">Pillar 12 · NEW &nbsp;·&nbsp; OpenTelemetry &nbsp;·&nbsp; Grafana &nbsp;·&nbsp; trace_id / agent_id / tool_call_id &nbsp;·&nbsp; Cognitive Lineage</div>
+        </div>
+        <div class="flow-branch-node" style="border-color:rgba(201,168,76,0.2);">
+          <div class="fn-title" style="color:var(--gold);">Evaluation & Trust Layer</div>
+          <div class="fn-desc">Pillar 15 · NEW &nbsp;·&nbsp; Continuous Eval &nbsp;·&nbsp; Safety Metrics &nbsp;·&nbsp; Cost Tracking &nbsp;·&nbsp; LLM-as-Judge</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ─── SECTION 02 — ALL 15 PILLARS ───────── -->
+  <section class="pillars-section">
+    <div class="section-header">
+      <div class="section-label">Section 02</div>
+      <div class="section-title">All 15 Pillars</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="pillars-grid">
+
+      <!-- ORIGINAL 8 -->
+      <div class="pillar-card">
+        <div class="pillar-number">PILLAR 01</div>
+        <div class="pillar-name">Cognitive &amp; Agent Architecture</div>
+        <div class="pillar-component">Cognitive Kernel</div>
+        <div class="pillar-desc">The AI OS brain. Permanent runtime controlling all agents. Owns reasoning, planning, working memory, and decision loops. LLM is stateless — the kernel holds continuity.</div>
+        <div class="pattern-tags">
+          <span class="ptag highlight">cognitive-loop</span>
+          <span class="ptag highlight">planner-executor</span>
+          <span class="ptag">reflection-pattern</span>
+          <span class="ptag">hierarchical-agents</span>
+          <span class="ptag">working-memory</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">PILLAR 02</div>
+        <div class="pillar-name">Memory Architecture</div>
+        <div class="pillar-component">Memory OS</div>
+        <div class="pillar-desc">Three-tier external memory. Semantic via pgvector, graph via Apache AGE, episodic event log via PostgreSQL. Memory lives outside the model. The platform holds truth.</div>
+        <div class="pattern-tags">
+          <span class="ptag highlight">memory-os</span>
+          <span class="ptag highlight">retrieval-augmented-generation</span>
+          <span class="ptag">vector-indexing</span>
+          <span class="ptag">knowledge-graph</span>
+          <span class="ptag">episodic-memory</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">PILLAR 03</div>
+        <div class="pillar-name">Orchestration &amp; Execution</div>
+        <div class="pillar-component">Orchestration Engine</div>
+        <div class="pillar-desc">Workflow control layer. Durable execution via Temporal ensures crash recovery. LangGraph drives structured reasoning. Agents do not execute directly — the orchestrator does.</div>
+        <div class="pattern-tags">
+          <span class="ptag highlight">orchestrator-worker</span>
+          <span class="ptag highlight">durable-execution</span>
+          <span class="ptag">state-machine</span>
+          <span class="ptag">checkpointing</span>
+          <span class="ptag">human-in-the-loop</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">PILLAR 04</div>
+        <div class="pillar-name">Reliability &amp; Distributed Systems</div>
+        <div class="pillar-component">Reliability Layer</div>
+        <div class="pillar-desc">System stability patterns: idempotent operations, graceful degradation, and circuit breakers to reduce cascade failures. Resilience depends on HA deployment choices.</div>
+        <div class="pattern-tags">
+          <span class="ptag">retry-pattern</span>
+          <span class="ptag">circuit-breaker</span>
+          <span class="ptag">idempotency</span>
+          <span class="ptag">graceful-degradation</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">PILLAR 05</div>
+        <div class="pillar-name">Inference &amp; Model Serving</div>
+        <div class="pillar-component">Inference Gateway</div>
+        <div class="pillar-desc">Model execution abstraction. Routes to optimal model by cost and latency, caches prompts, falls back gracefully. Models are replaceable — the platform owns cognition.</div>
+        <div class="pattern-tags">
+          <span class="ptag highlight">inference-gateway</span>
+          <span class="ptag highlight">model-routing</span>
+          <span class="ptag">fallback-pattern</span>
+          <span class="ptag">prompt-caching</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">PILLAR 06</div>
+        <div class="pillar-name">Multi-Agent Coordination</div>
+        <div class="pillar-component">Agent Ecosystem</div>
+        <div class="pillar-desc">Agent-to-agent collaboration via shared memory and supervisor delegation. Agents are specialized — each owns a domain. Coordination happens at the platform layer, not inside the LLM.</div>
+        <div class="pattern-tags">
+          <span class="ptag">agent-to-agent</span>
+          <span class="ptag">supervisor-worker</span>
+          <span class="ptag">shared-memory-coordination</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">PILLAR 07</div>
+        <div class="pillar-name">Security, Trust &amp; Governance</div>
+        <div class="pillar-component">AI Gateway / Firewall</div>
+        <div class="pillar-desc">Zero-trust perimeter with threat-drift monitoring and continuous adversarial testing. Requests are authenticated, sanitized, and logged before reaching the cognitive kernel. Adversarial input/output filtering is policy-driven and vendor-neutral.</div>
+        <div class="pattern-tags">
+          <span class="ptag highlight">zero-trust</span>
+          <span class="ptag highlight">audit-logging</span>
+          <span class="ptag">ai-firewall</span>
+          <span class="ptag">threat-drift-monitoring</span>
+          <span class="ptag">adversarial-filtering</span>
+          <span class="ptag">prompt-sanitization</span>
+          <span class="ptag">pii-redaction</span>
+          <span class="ptag">identity-and-access-control</span>
+        </div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-number">PILLAR 08</div>
+        <div class="pillar-name">Data &amp; Knowledge Integration</div>
+        <div class="pillar-component">Enterprise Data Layer</div>
+        <div class="pillar-desc">Semantic layer over all enterprise data sources. Federates databases, warehouses, APIs, and documents into a unified knowledge surface. Unstructured data governance (emails, chats, transcripts) is handled through classification, retention, provenance, and policy-aware ETL into Memory OS.</div>
+        <div class="pattern-tags">
+          <span class="ptag">semantic-layer</span>
+          <span class="ptag">data-federation</span>
+          <span class="ptag">unstructured-data-governance</span>
+          <span class="ptag">ETL</span>
+          <span class="ptag">event-driven-architecture</span>
+        </div>
+      </div>
+
+      <!-- NEW 7 -->
+      <div class="pillar-card new-pillar">
+        <div class="pillar-number">PILLAR 09</div>
+        <div class="pillar-name">Event-Sourced Cognitive State</div>
+        <div class="pillar-component">Cognitive Event Log</div>
+        <div class="pillar-desc">Append-only log of every cognitive event. Enables full replay, debugging, and reproducibility. Without this: no auditability, no root-cause analysis, no enterprise deployment.</div>
+        <div class="pattern-tags">
+          <span class="ptag new">event-sourcing</span>
+          <span class="ptag new">cognitive-lineage</span>
+          <span class="ptag new">append-only-log</span>
+          <span class="ptag new">replay</span>
+          <span class="ptag new">agent_thought</span>
+          <span class="ptag new">tool_call</span>
+        </div>
+      </div>
+
+      <div class="pillar-card new-pillar">
+        <div class="pillar-number">PILLAR 10</div>
+        <div class="pillar-name">Agent Identity &amp; Permissions</div>
+        <div class="pillar-component">Agent Identity Layer</div>
+        <div class="pillar-desc">Every agent has an identity, role, and bounded access scope. Agent A cannot access the Finance DB unless explicitly authorized. RBAC for agents is as mandatory as RBAC for humans.</div>
+        <div class="pattern-tags">
+          <span class="ptag new">agent-rbac</span>
+          <span class="ptag new">oauth2</span>
+          <span class="ptag new">agent-identity-registry</span>
+          <span class="ptag new">permission-scoping</span>
+        </div>
+      </div>
+
+      <div class="pillar-card new-pillar">
+        <div class="pillar-number">PILLAR 11</div>
+        <div class="pillar-name">Tool Execution Sandbox</div>
+        <div class="pillar-component">Execution Isolation Layer</div>
+        <div class="pillar-desc">Tool calls run in isolated execution environments under policy gates. The sandbox enforces DLP checks, egress controls, and artifact quarantine for unstructured content before data crosses trust boundaries. Agents do not directly access production systems in this reference model.</div>
+        <div class="pattern-tags">
+          <span class="ptag new">sandbox-execution</span>
+          <span class="ptag new">docker</span>
+          <span class="ptag new">firecracker</span>
+          <span class="ptag new">e2b</span>
+          <span class="ptag new">egress-policy</span>
+          <span class="ptag new">artifact-quarantine</span>
+          <span class="ptag new">execution-isolation</span>
+        </div>
+      </div>
+
+      <div class="pillar-card new-pillar">
+        <div class="pillar-number">PILLAR 12</div>
+        <div class="pillar-name">Observability / Cognitive Telemetry</div>
+        <div class="pillar-component">Observability Layer</div>
+        <div class="pillar-desc">End-to-end tracing of every request through every layer. Continuous performance monitoring and drift detection track input/output shifts and tool behavior regressions. Agentic trace-only metrics measure plan quality, step efficiency, retry burden, and tool success/failure over time.</div>
+        <div class="pattern-tags">
+          <span class="ptag new">opentelemetry</span>
+          <span class="ptag new">distributed-tracing</span>
+          <span class="ptag new">drift-detection</span>
+          <span class="ptag new">agentic-trace-metrics</span>
+          <span class="ptag new">plan-quality</span>
+          <span class="ptag new">step-efficiency</span>
+          <span class="ptag new">grafana</span>
+          <span class="ptag new">metrics</span>
+          <span class="ptag new">cognitive-telemetry</span>
+        </div>
+      </div>
+
+      <div class="pillar-card new-pillar">
+        <div class="pillar-number">PILLAR 13</div>
+        <div class="pillar-name">Distributed Task Queue / Worker</div>
+        <div class="pillar-component">Async Worker Layer</div>
+        <div class="pillar-desc">LLM calls should not block critical paths. Inference is typically asynchronous via worker queues so the cognitive kernel remains responsive at enterprise load.</div>
+        <div class="pattern-tags">
+          <span class="ptag new">async-workers</span>
+          <span class="ptag new">kafka</span>
+          <span class="ptag new">task-queue</span>
+          <span class="ptag new">temporal-workers</span>
+          <span class="ptag new">non-blocking</span>
+        </div>
+      </div>
+
+      <div class="pillar-card new-pillar">
+        <div class="pillar-number">PILLAR 14</div>
+        <div class="pillar-name">Agent Communication Protocol</div>
+        <div class="pillar-component">Agent Protocol Layer</div>
+        <div class="pillar-desc">Protocol interoperability layer. MCP standardizes tool and resource context exchange. A2A standardizes agent-to-agent task communication. Handoffs are explicit contracts, not loose strings.</div>
+        <div class="pattern-tags">
+          <span class="ptag new">mcp</span>
+          <span class="ptag new">agent-to-agent-protocol</span>
+          <span class="ptag new">task-handoff</span>
+          <span class="ptag new">capability-registry</span>
+        </div>
+      </div>
+
+      <div class="pillar-card new-pillar">
+        <div class="pillar-number">PILLAR 15</div>
+        <div class="pillar-name">Evaluation &amp; Trust</div>
+        <div class="pillar-component">Evaluation Layer</div>
+        <div class="pillar-desc">Evaluation stack combines automated Red Teaming, Reference/Golden Set benchmarking, and release-gated regression checks. Drift detection and LLM-as-Judge harnesses monitor quality, safety, and cost continuously. Trust is measured, not assumed.</div>
+        <div class="pattern-tags">
+          <span class="ptag new">automated-red-teaming</span>
+          <span class="ptag new">golden-set-benchmarking</span>
+          <span class="ptag new">regression-gates</span>
+          <span class="ptag new">drift-detection</span>
+          <span class="ptag new">llm-as-judge</span>
+          <span class="ptag new">continuous-eval</span>
+          <span class="ptag new">safety-metrics</span>
+          <span class="ptag new">cost-tracking</span>
+          <span class="ptag new">eval-pipeline</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ─── SECTION 03 — FULL ARCH DIAGRAM ────── -->
+  <section class="arch-section">
+    <div class="section-header">
+      <div class="section-label">Section 03</div>
+      <div class="section-title">Full Architecture Diagram — 14 Layers</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="arch-diagram">
+<pre>
+                   ENTERPRISE AI OPERATING SYSTEM
+         Principal / Distinguished Architect Reference — v2.0
+
+  ┌──────────────────────────────────────────────────────────┐
+  │                      CLIENT LAYER                        │
+  │   Employees │ Apps │ APIs │ External Systems │ Agents    │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │           AI GATEWAY / TRUST LAYER  [P7]                 │
+  │  Auth · Prompt Filtering · Threat Drift Monitoring       │
+  │  Adversarial Testing · Audit Log · Identity Verification │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │              COGNITIVE KERNEL  [P1]                      │
+  │  Reasoning · Planning · Decision Making                  │
+  │  Working Memory · Verification Engine · Strategy Manager │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+              ┌──────────────┴──────────────┐
+              ▼                             ▼
+  ┌───────────────────────┐    ┌────────────────────────────┐
+  │  DURABLE EXEC  [P3]   │    │  REASONING GRAPH  [P3]     │
+  │  Temporal             │    │  Think → Plan → Act        │
+  │  Checkpointing        │    │  Verify → Critique         │
+  │  Human-in-the-loop    │    │  Commit  ·  LangGraph      │
+  └───────────┬───────────┘    └─────────────┬──────────────┘
+              └──────────────┬───────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │    EVENT-SOURCED COGNITIVE STATE LAYER  [P9]  ← NEW      │
+  │  append-only log · agent_thought · tool_call             │
+  │  decision · memory_write · Full Replay · Lineage         │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │          MODEL INFERENCE GATEWAY  [P5]                   │
+  │  OpenAI / Anthropic / Gemini / vLLM                      │
+  │  Model Routing · Prompt Caching · Fallback · Cost Opt.   │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │                  MEMORY OS  [P2]                         │
+  │  PostgreSQL + pgvector  (semantic memory)                │
+  │  Apache AGE             (knowledge graph)                │
+  │  Episodic Event Log     (episodic memory)                │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │    AGENT IDENTITY & PERMISSION LAYER  [P10]  ← NEW       │
+  │  Agent RBAC · OAuth2 · Agent Identity Registry           │
+  │  Per-agent data scope · Finance DB example scoping       │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │      TOOL EXECUTION SANDBOX LAYER  [P11]  ← NEW          │
+  │  Docker / Firecracker / E2B                              │
+  │  Isolated execution · DLP/Egress/Artifact controls       │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+          ┌──────────────────┼──────────────────┐
+          ▼                  ▼                  ▼
+  ┌──────────────┐  ┌──────────────────┐  ┌──────────────────┐
+  │  TOOL LAYER  │  │  MULTI-AGENT     │  │ AGENT PROTO [P14]│
+  │              │  │  COORD.  [P6]    │  │  ← NEW           │
+  │  GitHub      │  │  Agent-to-Agent  │  │  MCP             │
+  │  Browser     │  │  Supervisor      │  │  Task Handoff    │
+  │  Email       │  │  Shared Memory   │  │  A2A Protocol    │
+  │  Internal API│  │  Coordination    │  │  Capability Reg. │
+  └──────────────┘  └──────────────────┘  └──────────────────┘
+          └──────────────────┬──────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │            ENTERPRISE DATA LAYER  [P8]                   │
+  │  Databases │ Warehouses │ Documents │ ERP │ APIs         │
+  │  Semantic Layer · ETL · Unstructured Data Governance     │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │   DISTRIBUTED TASK QUEUE / WORKER LAYER  [P13]  ← NEW    │
+  │  Temporal Workers · Kafka · Task Queues                  │
+  │  Async LLM calls · Non-blocking execution at scale       │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+            ┌────────────────┴────────────────┐
+            ▼                                 ▼
+  ┌──────────────────────┐    ┌──────────────────────────────┐
+  │  OBSERVABILITY [P12] │    │  EVALUATION & TRUST  [P15]   │
+  │  ← NEW               │    │  ← NEW                       │
+  │  OpenTelemetry       │    │  Red Teaming                 │
+  │  Drift Detection     │    │  Golden Reference Sets       │
+  │  Plan/Step Metrics   │    │  Regression Gates            │
+  │  Cognitive Lineage   │    │  LLM-as-Judge + Cost/Safety  │
+  └──────────────────────┘    └──────────────────────────────┘
+
+  ← NEW = added in v2.0 for expanded production-oriented coverage
+</pre>
+    </div>
+  </section>
+
+
+  <!-- ─── SECTION 04 — META-PATTERNS + INVARIANTS ── -->
+  <section class="tables-section">
+    <div class="section-header">
+      <div class="section-label">Section 04</div>
+      <div class="section-title">Meta-Patterns &amp; Core Invariants</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="tables-grid">
+
+      <div class="table-wrap">
+        <div class="table-title">Meta-Patterns — Core Design Principles</div>
+        <table class="data-table">
+          <thead><tr><th>Pattern</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>cognition / execution split</td><td>LLM does not execute directly</td></tr>
+            <tr><td>externalized memory</td><td>Memory lives outside the model</td></tr>
+            <tr><td>event-driven cognition</td><td>Everything is a traceable event</td></tr>
+            <tr><td>durable state</td><td>Nothing is lost on failure</td></tr>
+            <tr><td>zero-trust cognition</td><td>Every action is verified before execution</td></tr>
+            <tr><td>agent-as-principal</td><td>Agents have identity and bounded access</td></tr>
+            <tr><td>sandboxed execution</td><td>Tools run in isolated environments by policy</td></tr>
+            <tr><td>continuous evaluation</td><td>Trust is measured, not assumed</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-title">System Invariants — Operational Guarantees (Design Intent)</div>
+        <table class="data-table">
+          <thead><tr><th>Invariant</th><th>Enforced By</th></tr></thead>
+          <tbody>
+            <tr><td>memory is external</td><td>LLM is stateless by design</td></tr>
+            <tr><td>execution is durable</td><td>Temporal workflow engine</td></tr>
+            <tr><td>state is event-sourced</td><td>Append-only cognitive event log</td></tr>
+            <tr><td>all actions verified</td><td>Zero-trust gateway + sandboxed tools</td></tr>
+            <tr><td>agents are sandboxed</td><td>Docker / Firecracker / E2B</td></tr>
+            <tr><td>everything is observable</td><td>OpenTelemetry + trace IDs everywhere</td></tr>
+            <tr><td>models are replaceable</td><td>Platform owns cognition, not the model</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ─── SECTION 05 — INVARIANTS VISUAL ────── -->
+  <section class="invariants-section">
+    <div class="section-header">
+      <div class="section-label">Section 05</div>
+      <div class="section-title">Seven Core AI OS Invariants</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="invariants-grid">
+      <div class="invariant-card">
+        <div class="inv-number">01</div>
+        <div class="inv-title">Durable Execution</div>
+        <div class="inv-meaning">Workflows survive failure and resume exactly where they stopped.</div>
+        <div class="inv-tech">Temporal</div>
+      </div>
+      <div class="invariant-card">
+        <div class="inv-number">02</div>
+        <div class="inv-title">Persistent Memory</div>
+        <div class="inv-meaning">Memory is external to the model. The platform holds truth.</div>
+        <div class="inv-tech">PostgreSQL + pgvector + Apache AGE</div>
+      </div>
+      <div class="invariant-card">
+        <div class="inv-number">03</div>
+        <div class="inv-title">Event-Sourced State</div>
+        <div class="inv-meaning">Every cognitive event is logged. Replay is possible when retention and integrity controls are in place.</div>
+        <div class="inv-tech">Append-only Cognitive Event Log</div>
+      </div>
+      <div class="invariant-card">
+        <div class="inv-number">04</div>
+        <div class="inv-title">Verified Actions</div>
+        <div class="inv-meaning">LLMs do not execute tools directly in this architecture. Calls are permissioned and sandboxed.</div>
+        <div class="inv-tech">AI Gateway + Docker / Firecracker</div>
+      </div>
+      <div class="invariant-card">
+        <div class="inv-number">05</div>
+        <div class="inv-title">Full Observability</div>
+        <div class="inv-meaning">Every request is traceable end-to-end with structured IDs.</div>
+        <div class="inv-tech">OpenTelemetry + Grafana</div>
+      </div>
+      <div class="invariant-card">
+        <div class="inv-number">06</div>
+        <div class="inv-title">Failure Resilience</div>
+        <div class="inv-meaning">Distributed architecture designed to reduce single points of failure when deployed with HA topology.</div>
+        <div class="inv-tech">Circuit Breaker + Graceful Degradation</div>
+      </div>
+      <div class="invariant-card">
+        <div class="inv-number">07</div>
+        <div class="inv-title">Replaceable Models</div>
+        <div class="inv-meaning">The platform owns cognition. Models are swappable infrastructure.</div>
+        <div class="inv-tech">Inference Gateway + Model Routing</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SECTION 06 — ENTERPRISE MAPPING ───── -->
+  <section class="mapping-section">
+    <div class="section-header">
+      <div class="section-label">Section 06</div>
+      <div class="section-title">Enterprise Requirements → Architecture Layer</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="mapping-grid">
+      <div class="mapping-card">
+        <div class="mapping-req">Multi-Agent Orchestration</div>
+        <div class="mapping-layer">Cognitive Kernel + Agent Ecosystem</div>
+        <div class="mapping-desc">Pillar 1 owns planning, Pillar 6 owns coordination. Agents are specialized, not generalist.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">Semantic Retrieval</div>
+        <div class="mapping-layer">Memory OS</div>
+        <div class="mapping-desc">Three-tier memory: vector via pgvector, graph via Apache AGE, episodic via event log.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">MCP + A2A Interoperability</div>
+        <div class="mapping-layer">Agent Protocol + Sandbox Layer</div>
+        <div class="mapping-desc">MCP handles tool/resource contracts. A2A handles agent-to-agent task exchange. Execution remains sandboxed and policy-gated.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">Agent Runtime</div>
+        <div class="mapping-layer">Cognitive Kernel</div>
+        <div class="mapping-desc">Permanent runtime persisting across sessions. Owns cognitive state, not the underlying model.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">Model Routing</div>
+        <div class="mapping-layer">Inference Gateway</div>
+        <div class="mapping-desc">Dynamic routing by cost, latency, and capability. Models swap without architectural changes.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">Guardrails</div>
+        <div class="mapping-layer">Security Gateway + Agent Identity</div>
+        <div class="mapping-desc">Zero-trust perimeter plus per-agent RBAC. Requests and agent actions are expected to pass policy verification.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">Auditability &amp; Compliance</div>
+        <div class="mapping-layer">Event Log + Observability Layer</div>
+        <div class="mapping-desc">Every cognitive event is appended and traced. Full lineage for any decision or tool call.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">Enterprise Scale</div>
+        <div class="mapping-layer">Reliability + Worker Layer</div>
+        <div class="mapping-desc">Async workers decouple LLM latency from system responsiveness. Circuit breakers protect at scale.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">Continuous Quality</div>
+        <div class="mapping-layer">Evaluation &amp; Trust Layer</div>
+        <div class="mapping-desc">LLM-as-Judge harnesses measure quality automatically. Safety and cost tracked continuously.</div>
+      </div>
+      <div class="mapping-card">
+        <div class="mapping-req">Unified AI Platform</div>
+        <div class="mapping-layer">All 15 Pillars</div>
+        <div class="mapping-desc">The stack is designed to operate as one coherent AI OS, not a loose collection of disconnected tools.</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SECTION 07 — GOVERNANCE & RISK ─────── -->
+  <section class="governance-section">
+    <div class="section-header">
+      <div class="section-label">Section 07</div>
+      <div class="section-title">Enterprise Governance &amp; Risk Coverage (NIST AI RMF)</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-title">NIST AI RMF Lifecycle Mapping</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>AI RMF Function</th><th>Coverage In This Architecture</th><th>Operational Evidence</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Govern</td><td>P7 policy enforcement, P10 identity controls, event-sourced lineage for accountability.</td><td>Policy-as-code repos, approval workflows, ownership matrix, escalation runbooks.</td></tr>
+          <tr><td>Map</td><td>P2 memory scoping + P8 data federation define business context, data lineage, and intended use boundaries.</td><td>Data classification register, model cards, use-case risk register, architecture decision records.</td></tr>
+          <tr><td>Measure</td><td>P12 observability + P15 evaluation collect quality, safety, drift, and cost telemetry continuously.</td><td>SLO dashboards, eval datasets, incident trend reports, bias and performance scorecards.</td></tr>
+          <tr><td>Manage</td><td>P3 orchestration + P4 resilience + P7 trust layer enable mitigations, throttles, rollback, and human override.</td><td>Playbooks, game-day reports, kill-switch controls, post-incident corrective action tracking.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="matrix-note">Alignment targets NIST AI RMF 1.0 functions and should be tailored to sector obligations (for example SOC 2, ISO 42001, HIPAA, or PCI DSS).</div>
+  </section>
+
+
+  <!-- ─── SECTION 08 — LLM SECURITY MATRIX ───── -->
+  <section class="security-section">
+    <div class="section-header">
+      <div class="section-label">Section 08</div>
+      <div class="section-title">LLM Security Coverage Matrix (OWASP GenAI / LLM)</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-title">Risk → Control Coverage → Residual Gaps</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>OWASP Risk Theme</th><th>Primary Controls In This Design</th><th>Residual Risk / Required Hardening</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Prompt Injection</td><td>P7 prompt filtering, policy checks, tool permission boundaries, human review for sensitive actions.</td><td>Requires adversarial testing, model-specific jailbreak monitoring, and deny-by-default tool scopes.</td></tr>
+          <tr><td>Sensitive Information Disclosure</td><td>PII redaction, scoped memory retrieval, agent RBAC, encrypted stores and audit trails.</td><td>Needs periodic DLP validation, redaction quality tests, and strict data retention enforcement.</td></tr>
+          <tr><td>Excessive Agency</td><td>Sandboxed execution (P11), explicit approval gates, least-privilege identity (P10).</td><td>Requires transactional guardrails, rate limits, and blast-radius constraints per tool/action.</td></tr>
+          <tr><td>Supply Chain Vulnerability</td><td>Isolated tool runtime, signed artifact workflows, dependency governance, runtime observability.</td><td>Needs SBOM automation, provenance attestations, and continuous patch compliance checks.</td></tr>
+          <tr><td>Improper Output Handling</td><td>Structured output contracts, downstream validation, evaluation harnesses (P15).</td><td>Needs schema enforcement, escaping/sanitization in every consuming channel, and canary checks.</td></tr>
+          <tr><td>Unbounded Consumption</td><td>Model routing, worker queue controls, budget telemetry, fallback policies.</td><td>Needs hard budget ceilings, abuse detection, and auto-throttle tied to SLO burn rates.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="matrix-note">Coverage map is a design baseline. Production risk posture depends on threat modeling, validation depth, and operating discipline.</div>
+  </section>
+
+
+  <!-- ─── SECTION 09 — PATTERN VOCABULARY ───── -->
+  <section class="patterns-section">
+    <div class="section-header">
+      <div class="section-label">Section 09</div>
+      <div class="section-title">Complete Pattern Vocabulary</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="pattern-cloud">
+      <!-- original -->
+      <span class="pcloud-tag">memory-os</span>
+      <span class="pcloud-tag">retrieval-augmented-generation</span>
+      <span class="pcloud-tag">durable-execution</span>
+      <span class="pcloud-tag">orchestrator-worker</span>
+      <span class="pcloud-tag">state-machine</span>
+      <span class="pcloud-tag">event-driven-architecture</span>
+      <span class="pcloud-tag">model-routing</span>
+      <span class="pcloud-tag">fallback-pattern</span>
+      <span class="pcloud-tag">checkpointing</span>
+      <span class="pcloud-tag">planner-executor</span>
+      <span class="pcloud-tag">reflection-pattern</span>
+      <span class="pcloud-tag">hierarchical-agents</span>
+      <span class="pcloud-tag">inference-gateway</span>
+      <span class="pcloud-tag">zero-trust</span>
+      <span class="pcloud-tag">audit-logging</span>
+      <span class="pcloud-tag">cognitive-loop</span>
+      <span class="pcloud-tag">working-memory</span>
+      <span class="pcloud-tag">vector-indexing</span>
+      <span class="pcloud-tag">knowledge-graph</span>
+      <span class="pcloud-tag">episodic-memory</span>
+      <span class="pcloud-tag">agent-to-agent</span>
+      <span class="pcloud-tag">supervisor-worker</span>
+      <span class="pcloud-tag">shared-memory-coordination</span>
+      <span class="pcloud-tag">retry-pattern</span>
+      <span class="pcloud-tag">circuit-breaker</span>
+      <span class="pcloud-tag">idempotency</span>
+      <span class="pcloud-tag">graceful-degradation</span>
+      <span class="pcloud-tag">prompt-caching</span>
+      <span class="pcloud-tag">prompt-sanitization</span>
+      <span class="pcloud-tag">pii-redaction</span>
+      <span class="pcloud-tag">ai-firewall</span>
+      <span class="pcloud-tag">identity-and-access-control</span>
+      <span class="pcloud-tag">semantic-layer</span>
+      <span class="pcloud-tag">data-federation</span>
+      <span class="pcloud-tag">human-in-the-loop</span>
+      <!-- new v2 -->
+      <span class="pcloud-tag new">event-sourcing</span>
+      <span class="pcloud-tag new">cognitive-lineage</span>
+      <span class="pcloud-tag new">append-only-log</span>
+      <span class="pcloud-tag new">replay</span>
+      <span class="pcloud-tag new">agent-rbac</span>
+      <span class="pcloud-tag new">oauth2</span>
+      <span class="pcloud-tag new">agent-identity-registry</span>
+      <span class="pcloud-tag new">sandbox-execution</span>
+      <span class="pcloud-tag new">firecracker</span>
+      <span class="pcloud-tag new">e2b</span>
+      <span class="pcloud-tag new">opentelemetry</span>
+      <span class="pcloud-tag new">distributed-tracing</span>
+      <span class="pcloud-tag new">cognitive-telemetry</span>
+      <span class="pcloud-tag new">async-workers</span>
+      <span class="pcloud-tag new">kafka</span>
+      <span class="pcloud-tag new">task-queue</span>
+      <span class="pcloud-tag new">temporal-workers</span>
+      <span class="pcloud-tag new">mcp</span>
+      <span class="pcloud-tag new">task-handoff</span>
+      <span class="pcloud-tag new">capability-registry</span>
+      <span class="pcloud-tag new">llm-as-judge</span>
+      <span class="pcloud-tag new">continuous-eval</span>
+      <span class="pcloud-tag new">safety-metrics</span>
+      <span class="pcloud-tag new">cost-tracking</span>
+    </div>
+
+    <div class="pattern-count">
+      35 original patterns &nbsp;·&nbsp; <span style="color:var(--purple);">24 new patterns added in v2.0</span>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 10 — REFERENCES ─────────────── -->
+  <section class="references-section">
+    <div class="section-header">
+      <div class="section-label">Section 10</div>
+      <div class="section-title">References</div>
+      <div class="divider"></div>
+    </div>
+    <ul class="references-list">
+      <li class="reference-item">Model Context Protocol specification and lifecycle docs: <a href="https://modelcontextprotocol.io/specification/2025-06-18" target="_blank" rel="noopener noreferrer">modelcontextprotocol.io/specification</a></li>
+      <li class="reference-item">Google Agent2Agent protocol announcement and ecosystem context: <a href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/" target="_blank" rel="noopener noreferrer">developers.googleblog.com/a2a</a></li>
+      <li class="reference-item">NIST AI RMF Generative AI Profile (NIST AI 600-1): <a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence" target="_blank" rel="noopener noreferrer">nist.gov/publications/ai-rmf-generative-ai-profile</a></li>
+      <li class="reference-item">NIST AI RMF Playbook (Govern/Map/Measure/Manage guidance): <a href="https://airc.nist.gov/airmf-resources/playbook/" target="_blank" rel="noopener noreferrer">airc.nist.gov/airmf-resources/playbook</a></li>
+      <li class="reference-item">OWASP LLM Top 10 (2025): <a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener noreferrer">genai.owasp.org/llm-top-10</a></li>
+      <li class="reference-item">AWS SageMaker Model Monitor (data/model/bias/attribution drift): <a href="https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html" target="_blank" rel="noopener noreferrer">docs.aws.amazon.com/sagemaker/model-monitor</a></li>
+      <li class="reference-item">Google Vertex AI Model Monitoring overview: <a href="https://cloud.google.com/vertex-ai/docs/model-monitoring/overview" target="_blank" rel="noopener noreferrer">cloud.google.com/vertex-ai/model-monitoring</a></li>
+      <li class="reference-item">LangSmith trajectory evaluations for agent traces: <a href="https://docs.langchain.com/langsmith/trajectory-evals" target="_blank" rel="noopener noreferrer">docs.langchain.com/langsmith/trajectory-evals</a></li>
+      <li class="reference-item">MITRE ATLAS adversarial AI threat knowledge base: <a href="https://atlas.mitre.org/" target="_blank" rel="noopener noreferrer">atlas.mitre.org</a> and <a href="https://github.com/mitre-atlas/atlas-data" target="_blank" rel="noopener noreferrer">github.com/mitre-atlas/atlas-data</a></li>
+      <li class="reference-item">Temporal durable workflow execution model: <a href="https://docs.temporal.io/workflow-execution" target="_blank" rel="noopener noreferrer">docs.temporal.io/workflow-execution</a></li>
+      <li class="reference-item">LangGraph durable execution and checkpointing concepts: <a href="https://docs.langchain.com/oss/python/langgraph/overview" target="_blank" rel="noopener noreferrer">docs.langchain.com/langgraph</a></li>
+      <li class="reference-item">OpenTelemetry trace concepts and context propagation: <a href="https://opentelemetry.io/docs/concepts/signals/traces/" target="_blank" rel="noopener noreferrer">opentelemetry.io/docs/concepts/signals/traces</a></li>
+      <li class="reference-item">ISO/IEC 42001 context and enterprise governance posture: <a href="https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-42001" target="_blank" rel="noopener noreferrer">learn.microsoft.com/compliance/iso-42001</a></li>
+      <li class="reference-item">Enterprise AI data governance example (unstructured data + compliance controls): <a href="https://learn.microsoft.com/en-us/purview/ai-microsoft-purview" target="_blank" rel="noopener noreferrer">learn.microsoft.com/purview/ai-microsoft-purview</a></li>
+    </ul>
+  </section>
+
+
+  <!-- ─── FOOTER ─────────────────────────────── -->
+  <footer>
+    <div class="logo-wrap">
+      <div class="orb-glow"></div>
+      <img src="bluehole-small.png" alt="Taam Ja' LLC logo">
+    </div>
+    <div class="footer-logo">Taam Ja' LLC</div>
+    <div class="footer-tag">Deep Learning For Humans &nbsp;·&nbsp; taamja.ai</div>
+    <div class="footer-meta">
+      AI OS Architecture Reference v2.0 &nbsp;·&nbsp; 15 Pillars &nbsp;·&nbsp; 14 Layers &nbsp;·&nbsp; Production-Oriented
+    </div>
+    <div class="footer-copy">
+      &copy; 2024&ndash;2026 Taam Ja&#39; LLC. All rights reserved.
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const canvas = document.getElementById('bubbles-canvas');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const motes = Array.from({ length: 40 }, () => ({
+    x: Math.random(), y: Math.random(),
+    r: 0.5 + Math.random() * 1.5,
+    speed: 0.000030 + Math.random() * 0.000060,
+    drift: (Math.random() - 0.5) * 0.000030,
+    baseOp: 0.14 + Math.random() * 0.20,
+    phase: Math.random() * Math.PI * 2,
+  }));
+  function animate(now) {
+    canvas.width = canvas.width;
+    const W = canvas.width, H = canvas.height;
+    motes.forEach((m) => {
+      m.y -= m.speed;
+      m.x += m.drift + Math.sin(now * 0.00026 + m.phase) * 0.000060;
+      if (m.y < -0.02) { m.y = 1.02; m.x = Math.random(); }
+      if (m.x < 0) m.x = 1;
+      if (m.x > 1) m.x = 0;
+      const pulse = 0.4 + 0.6 * Math.sin(now * 0.0010 + m.phase);
+      ctx.beginPath();
+      ctx.arc(m.x * W, m.y * H, m.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(74,179,232,${m.baseOp * pulse})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+})();
+</script>
+
+</body>
+</html>

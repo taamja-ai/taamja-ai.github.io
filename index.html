@@ -95,20 +95,45 @@
             top: 30px;
             right: 40px;
             z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(16px) saturate(1.4);
+            -webkit-backdrop-filter: blur(16px) saturate(1.4);
+            border: 1px solid rgba(74,179,232,0.14);
+            border-radius: 100px;
+            padding: 4px;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.03) inset,
+                0 2px 20px rgba(0,0,0,0.3);
         }
 
         .top-nav-link {
-            color: rgba(255,255,255,0.6);
-            font-family: 'DM Sans', sans-serif;
+            color: rgba(200,221,232,0.7);
+            font-family: 'Rajdhani', sans-serif;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.72rem;
+            font-weight: 500;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            transition: color 0.3s ease;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            padding: 8px 20px;
+            border-radius: 100px;
+            position: relative;
         }
 
         .top-nav-link:hover {
-            color: #4ab3e8;
+            color: #e8f4fa;
+            background: rgba(74,179,232,0.1);
+            box-shadow: 0 0 12px rgba(74,179,232,0.15) inset;
+        }
+
+        .top-nav-link.active {
+            color: #7dd4f7;
+            background: rgba(74,179,232,0.08);
+            border: 1px solid rgba(74,179,232,0.2);
         }
 
         .top-nav-link:focus-visible {
@@ -214,12 +239,12 @@
         /* Buttons */
         .btn-container {
             display: flex;
-            gap: 1.2rem;
+            gap: 1.5rem;
             justify-content: center;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             align-items: stretch;
             width: 100%;
-            max-width: 560px;
+            max-width: 480px;
         }
 
         .btn {
@@ -228,12 +253,12 @@
             gap: 0.75rem;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            padding: 0.62rem 1.25rem;
+            padding: 0.45rem 1rem;
             border-radius: 4px;
             color: var(--text-main);
             text-decoration: none;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.8rem;
+            font-size: clamp(0.68rem, 0.75vw, 0.78rem);
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -242,8 +267,9 @@
             transition: all 0.3s ease;
             white-space: nowrap;
             justify-content: center;
-            min-height: 54px;
-            flex: 1 1 0;
+            min-height: 42px;
+            max-width: 230px;
+            flex: 1 1 200px;
         }
 
         .btn:hover {
@@ -278,6 +304,30 @@
             text-transform: none;
         }
 
+        .btn-primary {
+            border-color: rgba(56,189,248,0.25);
+            box-shadow: 0 0 15px rgba(56,189,248,0.1),
+                        inset 0 0 10px rgba(56,189,248,0.05);
+            animation: glow-pulse 4s infinite ease-in-out;
+        }
+
+        .btn-primary:hover {
+            border-color: rgba(56,189,248,0.6);
+            box-shadow: 0 0 25px rgba(56,189,248,0.3),
+                        inset 0 0 15px rgba(56,189,248,0.15);
+            transform: translateY(-2px) scale(1.01);
+            letter-spacing: 0.13em;
+        }
+
+        .btn:not(.btn-primary) {
+            opacity: 0.85;
+            border-color: rgba(255,255,255,0.1);
+            box-shadow: 0 0 8px rgba(56,189,248,0.05),
+                        inset 0 0 6px rgba(56,189,248,0.02);
+            animation: glow-pulse 4s infinite ease-in-out;
+            animation-delay: 2s;
+        }
+
         /* Footer */
         footer {
             position: fixed;
@@ -294,6 +344,13 @@
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(calc(var(--hero-shift) + 22px)); }
             to   { opacity: 1; transform: translateY(var(--hero-shift)); }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(56,189,248,0.08),
+                                    inset 0 0 8px rgba(56,189,248,0.04); }
+            50%      { box-shadow: 0 0 20px rgba(56,189,248,0.2),
+                                    inset 0 0 12px rgba(56,189,248,0.08); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -332,11 +389,32 @@
                 max-width: 680px;
             }
             .triad { font-size: clamp(0.82rem, 0.9vw, 1rem); }
-            .btn-container {
-                gap: 1.25rem;
-                max-width: 600px;
+        }
+
+        /* Mid-viewport: stacked nav chips (covers ~155-199% zoom on 4K) */
+        @media (max-width: 1100px) and (min-width: 641px) {
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 8px;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                box-shadow: none;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
             }
-            .btn { font-size: 0.82rem; }
+            .top-nav-link {
+                font-size: 0.66rem;
+                padding: 0.45rem 0.85rem;
+                border-radius: 4px;
+                border: 1px solid rgba(74,179,232,0.12);
+                background: rgba(4,22,40,0.6);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            }
         }
 
         /* Short viewport / high zoom mode: allow scrolling, avoid footer overlap */
@@ -364,12 +442,16 @@
                 padding: 0.75rem 0 1rem;
             }
             .btn-container {
-                flex-wrap: wrap;
-                max-width: 520px;
+                max-width: 560px;
             }
             .btn {
-                min-width: 230px;
-                flex: 1 1 230px;
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .btn:not(.btn-primary) {
+                transform: scale(0.97);
             }
         }
 
@@ -384,20 +466,22 @@
                 right: auto;
                 transform: translateX(-50%);
                 z-index: 120;
+                width: min(94vw, 420px);
+                justify-content: center;
+                flex-wrap: nowrap;
+                gap: 1px;
+                padding: 3px;
             }
             .top-nav-link {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 0.68rem;
-                letter-spacing: 0.16em;
-                padding: 0.45rem 0.85rem;
-                border-radius: 999px;
-                border: 1px solid rgba(255,255,255,0.16);
-                background: rgba(4, 14, 36, 0.45);
-                backdrop-filter: blur(8px);
-                -webkit-backdrop-filter: blur(8px);
+                font-size: 0.62rem;
+                letter-spacing: 0.14em;
+                padding: 0.42rem 0.62rem;
                 white-space: nowrap;
+                flex: 1 1 0;
+                min-width: 0;
             }
             .page {
                 position: relative;
@@ -438,6 +522,7 @@
                 font-size: 0.75rem;
                 width: 100%;
                 min-width: 100%;
+                max-width: none;
                 flex: 1 1 100%;
             }
             .logo-wrap img { width: 80px; height: 80px; }
@@ -450,12 +535,16 @@
                 padding: 0.75rem 0 calc(1.15rem + env(safe-area-inset-bottom));
             }
         }
+
     </style>
 </head>
 <body>
     <div class="top-nav">
         <a href="capabilities.html" class="top-nav-link">
             Founder & Capabilities
+        </a>
+        <a href="ai-os-architecture.html" class="top-nav-link active">
+            AI OS Blueprint
         </a>
     </div>
 
@@ -488,7 +577,7 @@
             </div>
 
             <div class="btn-container">
-                <a href="https://github.com/taamja-ai" class="btn" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/taamja-ai" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                     <i class="fab fa-github"></i>
                     <span>View on GitHub</span>
                 </a>
