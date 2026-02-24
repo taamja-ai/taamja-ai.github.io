@@ -41,6 +41,7 @@
             background-color: var(--bg-deep);
             color: var(--text-main);
             -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: 100%;
             overflow-x: hidden;
             overflow-y: hidden;
         }
@@ -87,6 +88,32 @@
             align-items: center;
             justify-content: center;
             z-index: 10;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            z-index: 100;
+        }
+
+        .top-nav-link {
+            color: rgba(255,255,255,0.6);
+            font-family: 'DM Sans', sans-serif;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .top-nav-link:hover {
+            color: #4ab3e8;
+        }
+
+        .top-nav-link:focus-visible {
+            outline: 2px solid rgba(74, 179, 232, 0.7);
+            outline-offset: 4px;
         }
 
         /* Content block — shifted up from center */
@@ -348,20 +375,64 @@
 
         /* Responsive: phones and narrow windows */
         @media (max-width: 640px) {
-            :root { --hero-shift: -1vh; }
+            :root { --hero-shift: 1.2vh; }
             body { overflow-y: auto; }
+            .top-nav {
+                position: fixed !important;
+                top: calc(env(safe-area-inset-top) + 10px);
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                z-index: 120;
+            }
+            .top-nav-link {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.68rem;
+                letter-spacing: 0.16em;
+                padding: 0.45rem 0.85rem;
+                border-radius: 999px;
+                border: 1px solid rgba(255,255,255,0.16);
+                background: rgba(4, 14, 36, 0.45);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                white-space: nowrap;
+            }
             .page {
                 position: relative;
                 min-height: 0;
                 height: auto;
                 justify-content: flex-start;
-                padding: 1rem 0 0.25rem;
+                padding: calc(env(safe-area-inset-top) + 3.9rem) 0 1.25rem;
             }
-            main { padding: 1rem; }
+            main {
+                padding-top: 1rem;
+                padding-right: calc(1rem + env(safe-area-inset-right));
+                padding-bottom: 1.4rem;
+                padding-left: calc(1rem + env(safe-area-inset-left));
+            }
             h1 { white-space: normal; font-size: clamp(1.8rem, 8vw, 3rem); }
             h2 { white-space: normal; font-size: 0.7rem; letter-spacing: 0.2em; }
-            .triad { white-space: normal; font-size: 0.78rem; }
-            .btn-container { flex-wrap: wrap; gap: 0.75rem; max-width: 360px; }
+            .tagline {
+                max-width: 34ch;
+                line-height: 1.62;
+                margin-bottom: 1.1rem;
+            }
+            .triad {
+                white-space: normal;
+                font-size: 0.78rem;
+                letter-spacing: 0.02em;
+                line-height: 1.5;
+                max-width: 34ch;
+                margin-bottom: 1.5rem;
+            }
+            .btn-container {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                max-width: 360px;
+                margin-bottom: 0.95rem;
+            }
             .btn {
                 padding: 0.7rem 1.2rem;
                 font-size: 0.75rem;
@@ -373,14 +444,17 @@
             footer {
                 position: relative;
                 z-index: 20;
-                padding: 0.75rem 0 1rem;
+                margin-top: 0.75rem;
+                font-size: 0.68rem;
+                line-height: 1.4;
+                padding: 0.75rem 0 calc(1.15rem + env(safe-area-inset-bottom));
             }
         }
     </style>
 </head>
 <body>
-    <div style="position: fixed; top: 30px; right: 40px; z-index: 100;">
-        <a href="capabilities.html" style="color: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; transition: color 0.3s;" onmouseover="this.style.color='#4ab3e8'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+    <div class="top-nav">
+        <a href="capabilities.html" class="top-nav-link">
             Founder & Capabilities
         </a>
     </div>
