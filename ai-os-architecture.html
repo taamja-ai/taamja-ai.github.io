@@ -916,8 +916,600 @@
     line-height: 1.45;
   }
 
-  /* ─── RESPONSIVE ──────────────────────────── */
-  @media (max-width: 980px) {
+  /* ─── V4 CORE STACK ──────────────────────── */
+  .core-section { margin-bottom: 80px; animation: fadeUp 1s 0.18s ease both; }
+
+  .core-philosophy {
+    max-width: 700px;
+    margin: 0 auto 36px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+
+  .core-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+
+  .core-node {
+    width: 100%;
+    max-width: 640px;
+    background: rgba(74,179,232,0.04);
+    border: 1px solid rgba(74,179,232,0.22);
+    border-left: 3px solid var(--glow-blue);
+    border-radius: 3px;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .core-node::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,179,232,0.3), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  .core-node:hover::before { opacity: 1; }
+  .core-node:hover {
+    border-color: rgba(74,179,232,0.45);
+    background: rgba(74,179,232,0.07);
+    transform: translateX(2px);
+  }
+
+  .core-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    color: rgba(74,179,232,0.35);
+    font-weight: 300;
+    min-width: 24px;
+    flex-shrink: 0;
+  }
+
+  .core-body { flex: 1; }
+
+  .core-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 3px;
+  }
+
+  .core-desc {
+    font-size: 0.72rem;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  .core-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.15em;
+    padding: 3px 8px;
+    border-radius: 1px;
+    background: rgba(74,179,232,0.1);
+    border: 1px solid rgba(74,179,232,0.35);
+    color: var(--glow-blue);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .core-arrow {
+    width: 1px; height: 18px;
+    background: linear-gradient(180deg, rgba(74,179,232,0.45), rgba(74,179,232,0.1));
+    margin: 0 auto;
+    position: relative;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+
+  .core-arrow::after {
+    content: '▼';
+    font-size: 0.48rem;
+    color: rgba(74,179,232,0.4);
+    position: absolute;
+    bottom: -5px;
+  }
+
+  .core-litmus {
+    max-width: 640px;
+    margin: 0 auto;
+    background: rgba(2,8,16,0.85);
+    border: 1px solid rgba(74,179,232,0.12);
+    border-radius: 3px;
+    padding: 16px 20px;
+  }
+
+  .litmus-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+
+  .litmus-tests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .litmus-test {
+    font-size: 0.7rem;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    padding: 3px 10px;
+    background: rgba(74,232,160,0.04);
+    border: 1px solid rgba(74,232,160,0.18);
+    border-radius: 1px;
+  }
+
+  .litmus-test::before {
+    content: '✓ ';
+    color: var(--green);
+    font-size: 0.65rem;
+  }
+
+  /* ─── PILLAR CARD VARIANTS ────────────────── */
+  .pillar-card.core-pillar {
+    border-color: rgba(74,179,232,0.2);
+  }
+
+  .pillar-card.core-pillar::after {
+    content: 'CORE';
+    position: absolute;
+    top: 12px; right: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--glow-blue);
+    border: 1px solid rgba(74,179,232,0.4);
+    padding: 2px 6px;
+    border-radius: 1px;
+    background: rgba(74,179,232,0.08);
+  }
+
+  .pillar-card.modular-pillar {
+    border-color: rgba(125,212,247,0.12);
+    opacity: 0.92;
+  }
+
+  .pillar-card.modular-pillar::after {
+    content: 'MODULAR';
+    position: absolute;
+    top: 12px; right: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    color: var(--soft);
+    border: 1px solid rgba(168,216,240,0.25);
+    padding: 2px 6px;
+    border-radius: 1px;
+  }
+
+  .pillar-card.modular-pillar .pillar-name { color: var(--soft); }
+
+  .when-to-consider {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: rgba(125,212,247,0.04);
+    border-left: 2px solid rgba(125,212,247,0.25);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .wtc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--soft);
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .wtc-text {
+    font-size: 0.71rem;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  /* Pillar section divider between core and modular */
+  .pillars-divider {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0 8px;
+  }
+
+  .pillars-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(74,179,232,0.15));
+  }
+
+  .pillars-divider-line.right {
+    background: linear-gradient(90deg, rgba(74,179,232,0.15), transparent);
+  }
+
+  .pillars-divider-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--dim);
+    white-space: nowrap;
+  }
+
+  /* ─── V3 ADDITIONS (keep gold) ──────────── */
+  .pillar-card.v3-pillar {
+    border-color: rgba(201,168,76,0.2);
+  }
+
+  .pillar-card.v3-pillar::after {
+    content: 'V3';
+    position: absolute;
+    top: 12px; right: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 2px 6px;
+    border-radius: 1px;
+  }
+
+  .pillar-card.v3-pillar .pillar-name { color: var(--gold); }
+
+  .ptag.v3 {
+    background: rgba(201,168,76,0.07);
+    border-color: rgba(201,168,76,0.28);
+    color: var(--gold);
+  }
+
+  .pcloud-tag.v3 {
+    background: rgba(201,168,76,0.05);
+    border-color: rgba(201,168,76,0.22);
+    color: rgba(201,168,76,0.85);
+  }
+
+  .pcloud-tag.v3:hover {
+    background: rgba(201,168,76,0.12);
+    border-color: rgba(201,168,76,0.5);
+    color: var(--gold);
+  }
+
+  /* ─── CONSTITUTION ────────────────────────── */
+  .constitution-section { margin-bottom: 80px; animation: fadeUp 1s 0.68s ease both; }
+
+  .constitution-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .article-card {
+    background: rgba(4,22,40,0.7);
+    border: 1px solid rgba(201,168,76,0.14);
+    border-radius: 3px;
+    padding: 18px 20px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .article-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  .article-card:hover::before { opacity: 1; }
+  .article-card:hover {
+    border-color: rgba(201,168,76,0.3);
+    background: rgba(4,22,40,0.92);
+    transform: translateY(-1px);
+  }
+
+  .article-roman {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.5);
+    margin-bottom: 5px;
+  }
+
+  .article-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .article-law {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.92rem;
+    color: var(--white);
+    font-style: italic;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+
+  .article-desc {
+    font-size: 0.74rem;
+    color: var(--dim);
+    line-height: 1.6;
+  }
+
+  .constitution-preamble {
+    background: rgba(201,168,76,0.04);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 3px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .constitution-preamble::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+  }
+
+  .preamble-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .preamble-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .amendment-box {
+    background: rgba(2,8,16,0.85);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 3px;
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+
+  .amendment-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+
+  .amendment-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .amendment-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    padding: 4px 10px;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 1px;
+    color: rgba(201,168,76,0.8);
+  }
+
+  /* ─── KUBERNETES ZONES ────────────────────── */
+  .k8s-section { margin-bottom: 80px; animation: fadeUp 1s 0.7s ease both; }
+
+  .k8s-zones {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .k8s-zone {
+    border: 1px solid rgba(74,179,232,0.14);
+    border-radius: 3px;
+    padding: 16px 22px;
+    background: rgba(4,22,40,0.65);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .k8s-zone:hover {
+    border-color: rgba(74,179,232,0.3);
+    background: rgba(4,22,40,0.9);
+  }
+
+  .k8s-zone::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 3px;
+  }
+
+  .k8s-zone-0::before { background: rgba(74,179,232,0.6); }
+  .k8s-zone-1::before { background: rgba(245,100,66,0.6); }
+  .k8s-zone-2::before { background: rgba(167,139,250,0.6); }
+  .k8s-zone-3::before { background: rgba(201,168,76,0.6); }
+  .k8s-zone-4::before { background: rgba(74,232,160,0.6); }
+  .k8s-zone-5::before { background: rgba(245,158,66,0.6); }
+
+  .k8s-zone-connector {
+    width: 1px;
+    height: 18px;
+    background: linear-gradient(180deg, rgba(74,179,232,0.3), rgba(74,179,232,0.1));
+    margin: 0 auto;
+    position: relative;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+
+  .k8s-zone-connector::after {
+    content: '▼';
+    font-size: 0.45rem;
+    color: rgba(74,179,232,0.35);
+    position: absolute;
+    bottom: -4px;
+  }
+
+  .k8s-zone-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+
+  .k8s-zone-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    flex-shrink: 0;
+  }
+
+  .k8s-zone-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .k8s-ns {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--glow-blue);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .k8s-zone-desc {
+    font-size: 0.74rem;
+    color: var(--dim);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .k8s-rules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .k8s-rule {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    padding: 2px 8px;
+    border-radius: 1px;
+    background: rgba(74,179,232,0.05);
+    border: 1px solid rgba(74,179,232,0.15);
+    color: var(--soft);
+  }
+
+  .k8s-rule.deny {
+    background: rgba(245,100,66,0.06);
+    border-color: rgba(245,100,66,0.2);
+    color: rgba(245,150,120,0.8);
+  }
+
+  .k8s-rule.allow {
+    background: rgba(74,232,160,0.05);
+    border-color: rgba(74,232,160,0.2);
+    color: rgba(74,232,160,0.8);
+  }
+
+  .k8s-doctrine {
+    background: rgba(2,8,16,0.85);
+    border: 1px solid rgba(74,179,232,0.12);
+    border-radius: 3px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+
+  .k8s-doctrine-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+
+  .k8s-doctrine-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .k8s-principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .k8s-principle {
+    background: rgba(4,22,40,0.6);
+    border: 1px solid rgba(74,179,232,0.1);
+    border-radius: 3px;
+    padding: 12px 14px;
+    font-size: 0.72rem;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  .k8s-principle strong {
+    display: block;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  /* ─── RESPONSIVE additions ────────────────── */
+  @media (max-width: 700px) {
+    .constitution-grid { grid-template-columns: 1fr; }
+    .k8s-principles { grid-template-columns: 1fr; }
+    .amendment-steps { flex-direction: column; }
+  }
     .container { padding: 48px 28px 80px; }
     .arch-diagram pre { font-size: 0.64rem; }
   }
@@ -1019,7 +1611,7 @@
     <div class="subtitle">Taam Ja' LLC · Deep Learning For Humans</div>
     <h1>Enterprise AI Operating System</h1>
     <div class="divider"></div>
-    <div class="tagline">Principal-level architecture reference — v2.0 — production-oriented blueprint</div>
+    <div class="tagline">Principal-level architecture reference — v4.0 — Minimal Core · Modular Expansions · Identity-Rooted</div>
 
     <div class="score-row">
       <div class="score-badge">
@@ -1047,6 +1639,104 @@
       <div class="assumptions-note">This diagram is an architecture reference, not a guarantee of production outcomes without these controls.</div>
     </div>
   </header>
+
+
+  <!-- ─── SECTION 00 — CANONICAL CORE ─────────── -->
+  <section class="core-section">
+    <div class="section-header">
+      <div class="section-label">Section 00 · Foundation</div>
+      <div class="section-title">Canonical 7-Layer Core</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="core-philosophy">
+      A minimal, composable, security-first cognitive infrastructure that AI-native systems plug into. Identity is the root of trust. Policy is supreme. Cognition is a consumer of infrastructure — not the center of it.
+    </div>
+
+    <div class="core-stack">
+
+      <div class="core-node">
+        <div class="core-num">1</div>
+        <div class="core-body">
+          <div class="core-name">Identity &amp; Policy Fabric</div>
+          <div class="core-desc">Agent identities · Human SSO/IAM · Scoped service principals · ABAC · Least-privilege enforcement · Tenant isolation. Identity is the root of trust — everything downstream is identity-bound.</div>
+        </div>
+        <div class="core-badge">P10 · P16 · P7</div>
+      </div>
+      <div class="core-arrow"></div>
+
+      <div class="core-node">
+        <div class="core-num">2</div>
+        <div class="core-body">
+          <div class="core-name">Model Gateway</div>
+          <div class="core-desc">Vendor-neutral inference abstraction · Input/output policy enforcement · Prompt injection filtering · Rate limiting · Cost controls · Model version tracking. All model calls flow through one gateway — this is what makes the OS sovereign.</div>
+        </div>
+        <div class="core-badge">P5 · P7</div>
+      </div>
+      <div class="core-arrow"></div>
+
+      <div class="core-node">
+        <div class="core-num">3</div>
+        <div class="core-body">
+          <div class="core-name">Data Governance &amp; Classification Engine</div>
+          <div class="core-desc">Sensitivity labeling · PII detection · Redaction pipeline · Field-level access enforcement · Residency enforcement · Encryption enforcement. Data must be classified before AI touches it.</div>
+        </div>
+        <div class="core-badge">P8</div>
+      </div>
+      <div class="core-arrow"></div>
+
+      <div class="core-node">
+        <div class="core-num">4</div>
+        <div class="core-body">
+          <div class="core-name">Durable Execution &amp; Event Log</div>
+          <div class="core-desc">Append-only · Immutable · Replayable · Queryable. Every cognitive act produces a structured record: input hash, output hash, model version, policy snapshot, identity context. Without this you cannot debug, audit, explain, or investigate drift.</div>
+        </div>
+        <div class="core-badge">P3 · P9</div>
+      </div>
+      <div class="core-arrow"></div>
+
+      <div class="core-node">
+        <div class="core-num">5</div>
+        <div class="core-body">
+          <div class="core-name">Memory OS</div>
+          <div class="core-desc">Namespaced · Policy-bound · Identity-scoped · Time-aware · Versioned. Enterprise memory is knowledge state, organizational context, institutional memory, and AI state continuity — but it must obey the Identity &amp; Policy Fabric.</div>
+        </div>
+        <div class="core-badge">P2</div>
+      </div>
+      <div class="core-arrow"></div>
+
+      <div class="core-node">
+        <div class="core-num">6</div>
+        <div class="core-body">
+          <div class="core-name">Tool &amp; Actuation Sandbox</div>
+          <div class="core-desc">Tool allowlisting · Execution sandboxing · Outbound network control · Deterministic input/output validation · Kill switch. Cognition and actuation must never blur.</div>
+        </div>
+        <div class="core-badge">P11</div>
+      </div>
+      <div class="core-arrow"></div>
+
+      <div class="core-node">
+        <div class="core-num">7</div>
+        <div class="core-body">
+          <div class="core-name">Observability &amp; Evaluation</div>
+          <div class="core-desc">Latency metrics · Token usage · Model drift detection · Hallucination scoring · Policy violation logs · Feedback loops · Regression testing. Without this you are flying blind.</div>
+        </div>
+        <div class="core-badge">P12 · P15</div>
+      </div>
+
+    </div>
+
+    <div class="core-litmus">
+      <div class="litmus-title">CISO Litmus Test — If deployed at Microsoft, Amazon, or Lockheed Martin:</div>
+      <div class="litmus-tests">
+        <span class="litmus-test">Survive CISO review</span>
+        <span class="litmus-test">Survive compliance audit</span>
+        <span class="litmus-test">Survive vendor change</span>
+        <span class="litmus-test">Survive model replacement</span>
+        <span class="litmus-test">Survive incident investigation</span>
+      </div>
+    </div>
+  </section>
 
 
   <!-- ─── SECTION 01 — FULL REQUEST FLOW ────── -->
@@ -1170,19 +1860,19 @@
   </section>
 
 
-  <!-- ─── SECTION 02 — ALL 15 PILLARS ───────── -->
+  <!-- ─── SECTION 02 — ALL 18 PILLARS ───────── -->
   <section class="pillars-section">
     <div class="section-header">
       <div class="section-label">Section 02</div>
-      <div class="section-title">All 15 Pillars</div>
+      <div class="section-title">All Pillars — Core + Modular Expansions</div>
       <div class="divider"></div>
     </div>
 
     <div class="pillars-grid">
 
-      <!-- ORIGINAL 8 -->
-      <div class="pillar-card">
-        <div class="pillar-number">PILLAR 01</div>
+      <!-- CORE PILLARS -->
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 01 · CORE</div>
         <div class="pillar-name">Cognitive &amp; Agent Architecture</div>
         <div class="pillar-component">Cognitive Kernel</div>
         <div class="pillar-desc">The AI OS brain. Permanent runtime controlling all agents. Owns reasoning, planning, working memory, and decision loops. LLM is stateless — the kernel holds continuity.</div>
@@ -1195,8 +1885,8 @@
         </div>
       </div>
 
-      <div class="pillar-card">
-        <div class="pillar-number">PILLAR 02</div>
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 02 · CORE</div>
         <div class="pillar-name">Memory Architecture</div>
         <div class="pillar-component">Memory OS</div>
         <div class="pillar-desc">Three-tier external memory. Semantic via pgvector, graph via Apache AGE, episodic event log via PostgreSQL. Memory lives outside the model. The platform holds truth.</div>
@@ -1209,8 +1899,8 @@
         </div>
       </div>
 
-      <div class="pillar-card">
-        <div class="pillar-number">PILLAR 03</div>
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 03 · CORE</div>
         <div class="pillar-name">Orchestration &amp; Execution</div>
         <div class="pillar-component">Orchestration Engine</div>
         <div class="pillar-desc">Workflow control layer. Durable execution via Temporal ensures crash recovery. LangGraph drives structured reasoning. Agents do not execute directly — the orchestrator does.</div>
@@ -1223,8 +1913,8 @@
         </div>
       </div>
 
-      <div class="pillar-card">
-        <div class="pillar-number">PILLAR 04</div>
+      <div class="pillar-card modular-pillar">
+        <div class="pillar-number">PILLAR 04 · MODULAR</div>
         <div class="pillar-name">Reliability &amp; Distributed Systems</div>
         <div class="pillar-component">Reliability Layer</div>
         <div class="pillar-desc">System stability patterns: idempotent operations, graceful degradation, and circuit breakers to reduce cascade failures. Resilience depends on HA deployment choices.</div>
@@ -1234,10 +1924,14 @@
           <span class="ptag">idempotency</span>
           <span class="ptag">graceful-degradation</span>
         </div>
+        <div class="when-to-consider">
+          <div class="wtc-label">When to Add</div>
+          <div class="wtc-text">Add when moving from single-instance to distributed deployment, or when agent workflows exceed 30-second execution windows. Not required for an MVP or simple copilot patterns.</div>
+        </div>
       </div>
 
-      <div class="pillar-card">
-        <div class="pillar-number">PILLAR 05</div>
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 05 · CORE</div>
         <div class="pillar-name">Inference &amp; Model Serving</div>
         <div class="pillar-component">Inference Gateway</div>
         <div class="pillar-desc">Model execution abstraction. Routes to optimal model by cost and latency, caches prompts, falls back gracefully. Models are replaceable — the platform owns cognition.</div>
@@ -1249,8 +1943,8 @@
         </div>
       </div>
 
-      <div class="pillar-card">
-        <div class="pillar-number">PILLAR 06</div>
+      <div class="pillar-card modular-pillar">
+        <div class="pillar-number">PILLAR 06 · MODULAR</div>
         <div class="pillar-name">Multi-Agent Coordination</div>
         <div class="pillar-component">Agent Ecosystem</div>
         <div class="pillar-desc">Agent-to-agent collaboration via shared memory and supervisor delegation. Agents are specialized — each owns a domain. Coordination happens at the platform layer, not inside the LLM.</div>
@@ -1259,10 +1953,14 @@
           <span class="ptag">supervisor-worker</span>
           <span class="ptag">shared-memory-coordination</span>
         </div>
+        <div class="when-to-consider">
+          <div class="wtc-label">When to Add</div>
+          <div class="wtc-text">Add when a single agent cannot complete a task within a reasonable context window, or when distinct domains (finance, legal, ops) need independent specialized agents. Not required for single-agent or copilot deployments.</div>
+        </div>
       </div>
 
-      <div class="pillar-card">
-        <div class="pillar-number">PILLAR 07</div>
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 07 · CORE</div>
         <div class="pillar-name">Security, Trust &amp; Governance</div>
         <div class="pillar-component">AI Gateway / Firewall</div>
         <div class="pillar-desc">Zero-trust perimeter with threat-drift monitoring and continuous adversarial testing. Requests are authenticated, sanitized, and logged before reaching the cognitive kernel. Adversarial input/output filtering is policy-driven and vendor-neutral.</div>
@@ -1278,8 +1976,8 @@
         </div>
       </div>
 
-      <div class="pillar-card">
-        <div class="pillar-number">PILLAR 08</div>
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 08 · CORE</div>
         <div class="pillar-name">Data &amp; Knowledge Integration</div>
         <div class="pillar-component">Enterprise Data Layer</div>
         <div class="pillar-desc">Semantic layer over all enterprise data sources. Federates databases, warehouses, APIs, and documents into a unified knowledge surface. Unstructured data governance (emails, chats, transcripts) is handled through classification, retention, provenance, and policy-aware ETL into Memory OS.</div>
@@ -1292,9 +1990,16 @@
         </div>
       </div>
 
-      <!-- NEW 7 -->
-      <div class="pillar-card new-pillar">
-        <div class="pillar-number">PILLAR 09</div>
+      <!-- ── MODULAR DIVIDER ── -->
+      <div class="pillars-divider">
+        <div class="pillars-divider-line"></div>
+        <div class="pillars-divider-label">Core Pillars Above · Modular Expansions Below</div>
+        <div class="pillars-divider-line right"></div>
+      </div>
+
+      <!-- PILLAR 09 — CORE -->
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 09 · CORE</div>
         <div class="pillar-name">Event-Sourced Cognitive State</div>
         <div class="pillar-component">Cognitive Event Log</div>
         <div class="pillar-desc">Append-only log of every cognitive event. Enables full replay, debugging, and reproducibility. Without this: no auditability, no root-cause analysis, no enterprise deployment.</div>
@@ -1308,8 +2013,9 @@
         </div>
       </div>
 
-      <div class="pillar-card new-pillar">
-        <div class="pillar-number">PILLAR 10</div>
+      <!-- PILLAR 10 — CORE -->
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 10 · CORE</div>
         <div class="pillar-name">Agent Identity &amp; Permissions</div>
         <div class="pillar-component">Agent Identity Layer</div>
         <div class="pillar-desc">Every agent has an identity, role, and bounded access scope. Agent A cannot access the Finance DB unless explicitly authorized. RBAC for agents is as mandatory as RBAC for humans.</div>
@@ -1321,8 +2027,9 @@
         </div>
       </div>
 
-      <div class="pillar-card new-pillar">
-        <div class="pillar-number">PILLAR 11</div>
+      <!-- PILLAR 11 — CORE -->
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 11 · CORE</div>
         <div class="pillar-name">Tool Execution Sandbox</div>
         <div class="pillar-component">Execution Isolation Layer</div>
         <div class="pillar-desc">Tool calls run in isolated execution environments under policy gates. The sandbox enforces DLP checks, egress controls, and artifact quarantine for unstructured content before data crosses trust boundaries. Agents do not directly access production systems in this reference model.</div>
@@ -1337,8 +2044,9 @@
         </div>
       </div>
 
-      <div class="pillar-card new-pillar">
-        <div class="pillar-number">PILLAR 12</div>
+      <!-- PILLAR 12 — CORE -->
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 12 · CORE</div>
         <div class="pillar-name">Observability / Cognitive Telemetry</div>
         <div class="pillar-component">Observability Layer</div>
         <div class="pillar-desc">End-to-end tracing of every request through every layer. Continuous performance monitoring and drift detection track input/output shifts and tool behavior regressions. Agentic trace-only metrics measure plan quality, step efficiency, retry burden, and tool success/failure over time.</div>
@@ -1355,8 +2063,9 @@
         </div>
       </div>
 
-      <div class="pillar-card new-pillar">
-        <div class="pillar-number">PILLAR 13</div>
+      <!-- PILLAR 13 — MODULAR -->
+      <div class="pillar-card modular-pillar">
+        <div class="pillar-number">PILLAR 13 · MODULAR</div>
         <div class="pillar-name">Distributed Task Queue / Worker</div>
         <div class="pillar-component">Async Worker Layer</div>
         <div class="pillar-desc">LLM calls should not block critical paths. Inference is typically asynchronous via worker queues so the cognitive kernel remains responsive at enterprise load.</div>
@@ -1367,10 +2076,15 @@
           <span class="ptag new">temporal-workers</span>
           <span class="ptag new">non-blocking</span>
         </div>
+        <div class="when-to-consider">
+          <div class="wtc-label">When to Add</div>
+          <div class="wtc-text">Add when concurrent agent workloads exceed what synchronous execution can handle, or when LLM latency is causing downstream timeouts. Critical for high-throughput enterprise deployments; not needed for low-volume or batch-only use cases.</div>
+        </div>
       </div>
 
-      <div class="pillar-card new-pillar">
-        <div class="pillar-number">PILLAR 14</div>
+      <!-- PILLAR 14 — MODULAR -->
+      <div class="pillar-card modular-pillar">
+        <div class="pillar-number">PILLAR 14 · MODULAR</div>
         <div class="pillar-name">Agent Communication Protocol</div>
         <div class="pillar-component">Agent Protocol Layer</div>
         <div class="pillar-desc">Protocol interoperability layer. MCP standardizes tool and resource context exchange. A2A standardizes agent-to-agent task communication. Handoffs are explicit contracts, not loose strings.</div>
@@ -1380,10 +2094,15 @@
           <span class="ptag new">task-handoff</span>
           <span class="ptag new">capability-registry</span>
         </div>
+        <div class="when-to-consider">
+          <div class="wtc-label">When to Add</div>
+          <div class="wtc-text">Add when building a multi-agent platform where agents from different teams or vendors must interoperate. MCP becomes essential when tool ecosystems grow beyond a handful of internal integrations. Less critical for single-team, single-agent deployments.</div>
+        </div>
       </div>
 
-      <div class="pillar-card new-pillar">
-        <div class="pillar-number">PILLAR 15</div>
+      <!-- PILLAR 15 — CORE -->
+      <div class="pillar-card core-pillar">
+        <div class="pillar-number">PILLAR 15 · CORE</div>
         <div class="pillar-name">Evaluation &amp; Trust</div>
         <div class="pillar-component">Evaluation Layer</div>
         <div class="pillar-desc">Evaluation stack combines automated Red Teaming, Reference/Golden Set benchmarking, and release-gated regression checks. Drift detection and LLM-as-Judge harnesses monitor quality, safety, and cost continuously. Trust is measured, not assumed.</div>
@@ -1400,6 +2119,62 @@
         </div>
       </div>
 
+      <!-- PILLAR 16 — CORE (v3) -->
+      <div class="pillar-card core-pillar v3-pillar" style="border-color:rgba(201,168,76,0.25);">
+        <div class="pillar-number">PILLAR 16 · CORE · V3</div>
+        <div class="pillar-name" style="color:var(--gold);">Policy Decision Plane</div>
+        <div class="pillar-component">Policy Engine / OPA</div>
+        <div class="pillar-desc">Central policy brain. Decides what is allowed before execution occurs. Distinct from the gateway — the gateway enforces, the PDP decides. Every agent action, tool call, and model access queries the PDP first. Enables need-to-know enforcement at enterprise-grade precision.</div>
+        <div class="pattern-tags">
+          <span class="ptag v3">open-policy-agent</span>
+          <span class="ptag v3">abac</span>
+          <span class="ptag v3">policy-as-code</span>
+          <span class="ptag v3">contextual-policy</span>
+          <span class="ptag v3">risk-based-policy</span>
+          <span class="ptag v3">need-to-know</span>
+        </div>
+      </div>
+
+      <!-- PILLAR 17 — MODULAR (v3) -->
+      <div class="pillar-card modular-pillar v3-pillar" style="border-color:rgba(201,168,76,0.15);">
+        <div class="pillar-number">PILLAR 17 · MODULAR · V3</div>
+        <div class="pillar-name" style="color:var(--soft);">Cognitive Security Layer</div>
+        <div class="pillar-component">AI Threat Defense Layer</div>
+        <div class="pillar-desc">Active defense against AI-specific attack surfaces. Validates agent thoughts, memory writes, and tool calls before they commit. Detects prompt injection, memory poisoning, model manipulation, and agent takeover attempts. Operates inside the cognitive loop — not just at the perimeter.</div>
+        <div class="pattern-tags">
+          <span class="ptag v3">prompt-injection-detection</span>
+          <span class="ptag v3">memory-poisoning-defense</span>
+          <span class="ptag v3">thought-validation</span>
+          <span class="ptag v3">tool-call-risk-analysis</span>
+          <span class="ptag v3">model-output-classification</span>
+          <span class="ptag v3">agent-takeover-prevention</span>
+        </div>
+        <div class="when-to-consider">
+          <div class="wtc-label">When to Add</div>
+          <div class="wtc-text">Add when operating in high-adversarial environments: defense, intelligence, financial trading, or any system where external untrusted content enters the cognitive loop. Also add when agents have write access to shared memory stores used by other agents or humans.</div>
+        </div>
+      </div>
+
+      <!-- PILLAR 18 — MODULAR (v3) -->
+      <div class="pillar-card modular-pillar v3-pillar" style="border-color:rgba(201,168,76,0.15);">
+        <div class="pillar-number">PILLAR 18 · MODULAR · V3</div>
+        <div class="pillar-name" style="color:var(--soft);">Simulation &amp; Pre-Deployment Testing</div>
+        <div class="pillar-component">Cognitive Simulation Layer</div>
+        <div class="pillar-desc">No agent capability goes directly to production. Shadow execution and synthetic environments validate attack resistance, failure modes, and decision quality before live deployment. Military systems never skip this. Neither should enterprise AI.</div>
+        <div class="pattern-tags">
+          <span class="ptag v3">shadow-execution</span>
+          <span class="ptag v3">synthetic-environments</span>
+          <span class="ptag v3">pre-deployment-validation</span>
+          <span class="ptag v3">red-team-environment</span>
+          <span class="ptag v3">failure-mode-testing</span>
+          <span class="ptag v3">attack-resistance-testing</span>
+        </div>
+        <div class="when-to-consider">
+          <div class="wtc-label">When to Add</div>
+          <div class="wtc-text">Add when agents can take irreversible actions — capital movement, document deletion, system configuration, or patient-facing decisions. Also required for regulated industries (finance, defense, healthcare) before any production deployment. Not required for read-only or informational agents.</div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1408,14 +2183,15 @@
   <section class="arch-section">
     <div class="section-header">
       <div class="section-label">Section 03</div>
-      <div class="section-title">Full Architecture Diagram — 14 Layers</div>
+      <div class="section-title">Full Architecture Diagram — v4.0 · 18 Pillars</div>
       <div class="divider"></div>
     </div>
 
     <div class="arch-diagram">
 <pre>
                    ENTERPRISE AI OPERATING SYSTEM
-         Principal / Distinguished Architect Reference — v2.0
+       Principal / Distinguished Architect Reference — v4.0
+          Minimal Core · Modular Expansions · Identity-Rooted
 
   ┌──────────────────────────────────────────────────────────┐
   │                      CLIENT LAYER                        │
@@ -1425,8 +2201,22 @@
                              ▼
   ┌──────────────────────────────────────────────────────────┐
   │           AI GATEWAY / TRUST LAYER  [P7]                 │
-  │  Auth · Prompt Filtering · Threat Drift Monitoring       │
-  │  Adversarial Testing · Audit Log · Identity Verification │
+  │  Auth · Prompt Filtering · Threat Drift · Audit Log      │
+  │  Identity Verification · Adversarial Testing             │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │     POLICY DECISION PLANE  [P16]  ← v3.0                 │
+  │  Open Policy Agent · ABAC · Contextual + Risk Policy     │
+  │  Gateway ENFORCES · PDP DECIDES · Need-to-Know           │
+  └──────────────────────────┬───────────────────────────────┘
+                             │
+                             ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │     COGNITIVE SECURITY LAYER  [P17]  ← v3.0              │
+  │  Thought Validation · Memory Poisoning Defense           │
+  │  Prompt Injection Detection · Tool Call Risk Analysis    │
   └──────────────────────────┬───────────────────────────────┘
                              │
                              ▼
@@ -1448,7 +2238,7 @@
                              │
                              ▼
   ┌──────────────────────────────────────────────────────────┐
-  │    EVENT-SOURCED COGNITIVE STATE LAYER  [P9]  ← NEW      │
+  │    EVENT-SOURCED COGNITIVE STATE LAYER  [P9]             │
   │  append-only log · agent_thought · tool_call             │
   │  decision · memory_write · Full Replay · Lineage         │
   └──────────────────────────┬───────────────────────────────┘
@@ -1470,14 +2260,14 @@
                              │
                              ▼
   ┌──────────────────────────────────────────────────────────┐
-  │    AGENT IDENTITY & PERMISSION LAYER  [P10]  ← NEW       │
+  │    AGENT IDENTITY & PERMISSION LAYER  [P10]              │
   │  Agent RBAC · OAuth2 · Agent Identity Registry           │
   │  Per-agent data scope · Finance DB example scoping       │
   └──────────────────────────┬───────────────────────────────┘
                              │
                              ▼
   ┌──────────────────────────────────────────────────────────┐
-  │      TOOL EXECUTION SANDBOX LAYER  [P11]  ← NEW          │
+  │      TOOL EXECUTION SANDBOX LAYER  [P11]                 │
   │  Docker / Firecracker / E2B                              │
   │  Isolated execution · DLP/Egress/Artifact controls       │
   └──────────────────────────┬───────────────────────────────┘
@@ -1486,11 +2276,10 @@
           ▼                  ▼                  ▼
   ┌──────────────┐  ┌──────────────────┐  ┌──────────────────┐
   │  TOOL LAYER  │  │  MULTI-AGENT     │  │ AGENT PROTO [P14]│
-  │              │  │  COORD.  [P6]    │  │  ← NEW           │
-  │  GitHub      │  │  Agent-to-Agent  │  │  MCP             │
+  │  GitHub      │  │  COORD.  [P6]    │  │  MCP · A2A       │
   │  Browser     │  │  Supervisor      │  │  Task Handoff    │
-  │  Email       │  │  Shared Memory   │  │  A2A Protocol    │
-  │  Internal API│  │  Coordination    │  │  Capability Reg. │
+  │  Email       │  │  Shared Memory   │  │  Capability Reg. │
+  │  Internal API│  │  Agent-to-Agent  │  │                  │
   └──────────────┘  └──────────────────┘  └──────────────────┘
           └──────────────────┬──────────────────┘
                              │
@@ -1503,23 +2292,23 @@
                              │
                              ▼
   ┌──────────────────────────────────────────────────────────┐
-  │   DISTRIBUTED TASK QUEUE / WORKER LAYER  [P13]  ← NEW    │
+  │   DISTRIBUTED TASK QUEUE / WORKER LAYER  [P13]           │
   │  Temporal Workers · Kafka · Task Queues                  │
   │  Async LLM calls · Non-blocking execution at scale       │
   └──────────────────────────┬───────────────────────────────┘
                              │
-            ┌────────────────┴────────────────┐
-            ▼                                 ▼
-  ┌──────────────────────┐    ┌──────────────────────────────┐
-  │  OBSERVABILITY [P12] │    │  EVALUATION & TRUST  [P15]   │
-  │  ← NEW               │    │  ← NEW                       │
-  │  OpenTelemetry       │    │  Red Teaming                 │
-  │  Drift Detection     │    │  Golden Reference Sets       │
-  │  Plan/Step Metrics   │    │  Regression Gates            │
-  │  Cognitive Lineage   │    │  LLM-as-Judge + Cost/Safety  │
-  └──────────────────────┘    └──────────────────────────────┘
+            ┌────────────────┼────────────────┐
+            ▼                ▼                ▼
+  ┌────────────────┐  ┌────────────────┐  ┌─────────────────────┐
+  │ OBSERVABILITY  │  │  EVALUATION    │  │  SIMULATION   ← v3.0│
+  │  [P12]         │  │  & TRUST [P15] │  │  [P18]              │
+  │  OpenTelemetry │  │  Red Teaming   │  │  Shadow Execution   │
+  │  Drift Detect. │  │  LLM-as-Judge  │  │  Synthetic Envs     │
+  │  Cognitive     │  │  Regression    │  │  Pre-Deploy Valid.  │
+  │  Telemetry     │  │  Gates         │  │  Attack Resistance  │
+  └────────────────┘  └────────────────┘  └─────────────────────┘
 
-  ← NEW = added in v2.0 for expanded production-oriented coverage
+  ← v3.0 additions: Policy Decision Plane [P16] · Cognitive Security [P17] · Simulation [P18]
 </pre>
     </div>
   </section>
@@ -1548,6 +2337,9 @@
             <tr><td>agent-as-principal</td><td>Agents have identity and bounded access</td></tr>
             <tr><td>sandboxed execution</td><td>Tools run in isolated environments by policy</td></tr>
             <tr><td>continuous evaluation</td><td>Trust is measured, not assumed</td></tr>
+            <tr><td style="color:var(--gold)">policy decides / gateway enforces</td><td>PDP and enforcement are separate planes</td></tr>
+            <tr><td style="color:var(--gold)">cognition is untrusted until verified</td><td>Cognitive Security Layer validates pre-commit</td></tr>
+            <tr><td style="color:var(--gold)">simulate before production</td><td>No capability deploys without sandbox validation</td></tr>
           </tbody>
         </table>
       </div>
@@ -1564,6 +2356,9 @@
             <tr><td>agents are sandboxed</td><td>Docker / Firecracker / E2B</td></tr>
             <tr><td>everything is observable</td><td>OpenTelemetry + trace IDs everywhere</td></tr>
             <tr><td>models are replaceable</td><td>Platform owns cognition, not the model</td></tr>
+            <tr><td style="color:var(--gold)">policy is supreme</td><td>PDP overrides all planes — no exceptions</td></tr>
+            <tr><td style="color:var(--gold)">cognition is untrusted</td><td>Cognitive Security validates every thought pre-commit</td></tr>
+            <tr><td style="color:var(--gold)">simulate before deploy</td><td>Shadow execution + synthetic env required</td></tr>
           </tbody>
         </table>
       </div>
@@ -1683,7 +2478,7 @@
       </div>
       <div class="mapping-card">
         <div class="mapping-req">Unified AI Platform</div>
-        <div class="mapping-layer">All 15 Pillars</div>
+        <div class="mapping-layer">All 18 Pillars</div>
         <div class="mapping-desc">The stack is designed to operate as one coherent AI OS, not a loose collection of disconnected tools.</div>
       </div>
     </div>
@@ -1814,22 +2609,285 @@
       <span class="pcloud-tag new">continuous-eval</span>
       <span class="pcloud-tag new">safety-metrics</span>
       <span class="pcloud-tag new">cost-tracking</span>
+      <!-- v3 patterns -->
+      <span class="pcloud-tag v3">open-policy-agent</span>
+      <span class="pcloud-tag v3">abac</span>
+      <span class="pcloud-tag v3">policy-as-code</span>
+      <span class="pcloud-tag v3">need-to-know</span>
+      <span class="pcloud-tag v3">prompt-injection-detection</span>
+      <span class="pcloud-tag v3">memory-poisoning-defense</span>
+      <span class="pcloud-tag v3">thought-validation</span>
+      <span class="pcloud-tag v3">tool-call-risk-analysis</span>
+      <span class="pcloud-tag v3">model-output-classification</span>
+      <span class="pcloud-tag v3">shadow-execution</span>
+      <span class="pcloud-tag v3">synthetic-environments</span>
+      <span class="pcloud-tag v3">pre-deployment-validation</span>
+      <span class="pcloud-tag v3">red-team-environment</span>
+      <span class="pcloud-tag v3">attack-resistance-testing</span>
     </div>
 
     <div class="pattern-count">
-      35 original patterns &nbsp;·&nbsp; <span style="color:var(--purple);">24 new patterns added in v2.0</span>
+      35 original patterns &nbsp;·&nbsp; <span style="color:var(--purple);">24 v2.0 patterns</span> &nbsp;·&nbsp; <span style="color:var(--gold);">14 v3.0 patterns added</span>
     </div>
   </section>
 
-  <!-- ─── SECTION 10 — REFERENCES ─────────────── -->
+  <!-- ─── SECTION 10 — COGNITIVE CONSTITUTION ── -->
+  <section class="constitution-section">
+    <div class="section-header">
+      <div class="section-label">Section 10 · v3.0</div>
+      <div class="section-title">Cognitive Constitution v1.0</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="constitution-preamble">
+      <div class="preamble-label">Preamble — Foundational Doctrine</div>
+      <div class="preamble-text">
+        The Enterprise AI Operating System exists to extend human reasoning, preserve human authority, maintain deterministic control, protect enterprise capital, and ensure full auditability. This is not documentation. It is law. All cognition is treated as untrusted until verified.
+      </div>
+    </div>
+
+    <div class="constitution-grid">
+
+      <div class="article-card">
+        <div class="article-roman">Article I</div>
+        <div class="article-title">Sovereignty of Deterministic Execution</div>
+        <div class="article-law">No external action shall occur without deterministic workflow compilation, policy approval, identity attribution, and event logging.</div>
+        <div class="article-desc">LLM outputs are advisory only. The system compiles plans into deterministic execution graphs before any action is taken.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article II</div>
+        <div class="article-title">Zero Trust Cognition</div>
+        <div class="article-law">All generated thoughts may contain error, manipulation, hallucination, or adversarial input. All cognition must pass verification before execution.</div>
+        <div class="article-desc">The Cognitive Security Layer is the constitutional enforcement mechanism for this article.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article III</div>
+        <div class="article-title">Identity Primacy</div>
+        <div class="article-law">Every action must be attributable to a human, an agent identity, or a system service. Anonymous execution is forbidden.</div>
+        <div class="article-desc">Agent Identity & Permission Layer enforces this. No action enters the execution plane without a verified identity.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article IV</div>
+        <div class="article-title">Policy Supremacy</div>
+        <div class="article-law">Policy Decision Plane overrides all other planes. If policy denies an action, execution halts. No exception.</div>
+        <div class="article-desc">Gateway enforces. PDP decides. These are structurally separate. Policy cannot be bypassed by any downstream layer.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article V</div>
+        <div class="article-title">Memory Integrity</div>
+        <div class="article-law">All memory writes must include classification, source attribution, be append-only, and be replayable. No mutation outside the event log.</div>
+        <div class="article-desc">The Event-Sourced Cognitive State Layer enforces append-only. No memory write bypasses the log.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article VI</div>
+        <div class="article-title">Simulation Before Power</div>
+        <div class="article-law">No new capability shall access production data, execute live tools, or control capital until tested in simulation.</div>
+        <div class="article-desc">The Simulation Layer is the mandatory gate. This is how military systems prevent capability deployment failures.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article VII</div>
+        <div class="article-title">Capital &amp; Irreversibility</div>
+        <div class="article-law">No cognition may directly move capital. All trades must pass risk kernel. Hard-coded exposure limits are immutable.</div>
+        <div class="article-desc">Applies when extended to financial systems. Drawdown guardrails are not configuration — they are architecture.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article VIII</div>
+        <div class="article-title">Auditability &amp; Replay</div>
+        <div class="article-law">The system must replay full decision path, reconstruct state at any timestamp, and trace any action to its originating thought. If replay is impossible — architecture is invalid.</div>
+        <div class="article-desc">Non-negotiable. A system that cannot replay its decisions cannot be trusted in regulated environments.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article IX</div>
+        <div class="article-title">Escalation Discipline</div>
+        <div class="article-law">If uncertainty exceeds defined threshold, system must halt, escalate to human, and log decision context. Improvisation in high-risk domains is prohibited.</div>
+        <div class="article-desc">Human-in-the-loop is a constitutional right, not an optional feature. The Orchestration Layer enforces escalation paths.</div>
+      </div>
+
+      <div class="article-card">
+        <div class="article-roman">Article X</div>
+        <div class="article-title">Least Privilege Expansion</div>
+        <div class="article-law">When adding capability: increase constraints first, add monitoring second, add policy third, then enable feature. Never reverse order.</div>
+        <div class="article-desc">This is the constitutional order of operations for all platform extensions. Capability is the last step, not the first.</div>
+      </div>
+
+    </div>
+
+    <div class="amendment-box">
+      <div class="amendment-title">Constitutional Amendment Process — Required Steps</div>
+      <div class="amendment-steps">
+        <span class="amendment-step">Security Review</span>
+        <span class="amendment-step">Determinism Review</span>
+        <span class="amendment-step">Replayability Validation</span>
+        <span class="amendment-step">Policy Update</span>
+        <span class="amendment-step">Simulation Validation</span>
+        <span class="amendment-step">No Unilateral Mutation</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SECTION 11 — KUBERNETES ZONES ────── -->
+  <section class="k8s-section">
+    <div class="section-header">
+      <div class="section-label">Section 11 · v3.0</div>
+      <div class="section-title">Kubernetes Zone Segmentation</div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="k8s-doctrine">
+      <div class="k8s-doctrine-title">Design Doctrine</div>
+      <div class="k8s-doctrine-text">Kubernetes is not a cluster. It is a cognitive containment fabric. Each zone represents a trust boundary, a blast radius boundary, a policy enforcement boundary, a network boundary, and an identity boundary. No pod may exist outside a zone.</div>
+    </div>
+
+    <div class="k8s-zones">
+
+      <div class="k8s-zone k8s-zone-0">
+        <div class="k8s-zone-header">
+          <div class="k8s-zone-num">ZONE 0</div>
+          <div class="k8s-zone-name">Public Ingress Edge</div>
+          <div class="k8s-ns">ns: zone-0-edge</div>
+        </div>
+        <div class="k8s-zone-desc">API Gateway · WAF · TLS Termination. First contact with the outside world. No internal services exposed directly.</div>
+        <div class="k8s-rules">
+          <span class="k8s-rule deny">deny-all ingress default</span>
+          <span class="k8s-rule allow">allow: port 443 inbound</span>
+          <span class="k8s-rule deny">no direct DB access</span>
+        </div>
+      </div>
+
+      <div class="k8s-zone-connector"></div>
+
+      <div class="k8s-zone k8s-zone-1">
+        <div class="k8s-zone-header">
+          <div class="k8s-zone-num">ZONE 1</div>
+          <div class="k8s-zone-name">Trust Gateway</div>
+          <div class="k8s-ns">ns: zone-1-gateway</div>
+        </div>
+        <div class="k8s-zone-desc">AI Gateway · Auth · OPA · Threat Detection · Audit. Policy enforcement perimeter. No outbound internet except model proxy.</div>
+        <div class="k8s-rules">
+          <span class="k8s-rule deny">no direct DB access</span>
+          <span class="k8s-rule deny">no outbound internet</span>
+          <span class="k8s-rule allow">allow: model proxy egress</span>
+          <span class="k8s-rule allow">allow: zone-2 internal</span>
+        </div>
+      </div>
+
+      <div class="k8s-zone-connector"></div>
+
+      <div class="k8s-zone k8s-zone-2">
+        <div class="k8s-zone-header">
+          <div class="k8s-zone-num">ZONE 2</div>
+          <div class="k8s-zone-name">Control + Cognitive</div>
+          <div class="k8s-ns">ns: zone-2-cognitive</div>
+        </div>
+        <div class="k8s-zone-desc">Control Plane · Cognitive Kernel · Planner · Cognitive Compiler. No direct tool execution. No direct external network. Must pass through execution plane.</div>
+        <div class="k8s-rules">
+          <span class="k8s-rule deny">no direct tool execution</span>
+          <span class="k8s-rule deny">no external network</span>
+          <span class="k8s-rule allow">allow: zone-3 temporal</span>
+          <span class="k8s-rule allow">allow: zone-4 read via SA</span>
+        </div>
+      </div>
+
+      <div class="k8s-zone-connector"></div>
+
+      <div class="k8s-zone k8s-zone-3">
+        <div class="k8s-zone-header">
+          <div class="k8s-zone-num">ZONE 3</div>
+          <div class="k8s-zone-name">Execution Workers</div>
+          <div class="k8s-ns">ns: zone-3-execution</div>
+        </div>
+        <div class="k8s-zone-desc">Temporal Workers · Workflow Runners · Async LLM Calls. Deterministic execution only. Cannot call internet directly.</div>
+        <div class="k8s-rules">
+          <span class="k8s-rule deny">no direct internet</span>
+          <span class="k8s-rule deny">no cluster-wide DNS</span>
+          <span class="k8s-rule allow">allow: zone-4 data plane</span>
+          <span class="k8s-rule allow">allow: zone-5 sandbox dispatch</span>
+        </div>
+      </div>
+
+      <div class="k8s-zone-connector"></div>
+
+      <div class="k8s-zone k8s-zone-4">
+        <div class="k8s-zone-header">
+          <div class="k8s-zone-num">ZONE 4</div>
+          <div class="k8s-zone-name">Data Plane</div>
+          <div class="k8s-ns">ns: zone-4-data</div>
+        </div>
+        <div class="k8s-zone-desc">PostgreSQL · pgvector · Apache AGE · Kafka. No outbound internet. Access only via dedicated service accounts with least-privilege RBAC.</div>
+        <div class="k8s-rules">
+          <span class="k8s-rule deny">no outbound internet</span>
+          <span class="k8s-rule deny">no shared credentials</span>
+          <span class="k8s-rule allow">access via service accounts only</span>
+          <span class="k8s-rule allow">secrets: Vault / cloud KMS</span>
+        </div>
+      </div>
+
+      <div class="k8s-zone-connector"></div>
+
+      <div class="k8s-zone k8s-zone-5">
+        <div class="k8s-zone-header">
+          <div class="k8s-zone-num">ZONE 5</div>
+          <div class="k8s-zone-name">Tool Sandbox</div>
+          <div class="k8s-ns">ns: zone-5-sandbox</div>
+        </div>
+        <div class="k8s-zone-desc">Firecracker / Docker MicroVM · Ephemeral Compute. Maximum isolation. If Zone 5 is compromised, it cannot reach Zone 2, Zone 4, or the control plane.</div>
+        <div class="k8s-rules">
+          <span class="k8s-rule deny">no internal network access</span>
+          <span class="k8s-rule deny">no cluster DNS resolution</span>
+          <span class="k8s-rule allow">egress: whitelisted domains only</span>
+          <span class="k8s-rule allow">ephemeral only — no persistence</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="k8s-principles">
+      <div class="k8s-principle">
+        <strong>Default Deny</strong>
+        Every namespace starts with deny-all ingress and deny-all egress. Explicit allow rules required for every connection.
+      </div>
+      <div class="k8s-principle">
+        <strong>Service Account Isolation</strong>
+        Every microservice gets a dedicated service account. No shared tokens across zones. No default service account used.
+      </div>
+      <div class="k8s-principle">
+        <strong>Secrets Model</strong>
+        External secret manager (Vault / cloud KMS). No secrets in environment variables. Mounted read-only. Rotation enforced.
+      </div>
+      <div class="k8s-principle">
+        <strong>Resource Quotas</strong>
+        CPU, memory, pod count, and rate limits per zone. Prevents recursive runaway agents, cost explosions, and cascade DoS.
+      </div>
+      <div class="k8s-principle">
+        <strong>Scale Without Merge</strong>
+        Scale by increasing worker replicas — never by increasing privileges or merging zones. Isolation is preserved at all scale levels.
+      </div>
+      <div class="k8s-principle">
+        <strong>Blast Radius Rule</strong>
+        Zone 5 compromise cannot reach Zone 2 or Zone 4. Segmentation is the containment strategy — not detection alone.
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SECTION 12 — REFERENCES ─────────────── -->
   <section class="references-section">
     <div class="section-header">
-      <div class="section-label">Section 10</div>
+      <div class="section-label">Section 12</div>
       <div class="section-title">References</div>
       <div class="divider"></div>
     </div>
     <ul class="references-list">
-      <li class="reference-item">Model Context Protocol specification and lifecycle docs: <a href="https://modelcontextprotocol.io/specification/2025-06-18" target="_blank" rel="noopener noreferrer">modelcontextprotocol.io/specification</a></li>
+      <li class="reference-item">Model Context Protocol specification and lifecycle docs: <a href="https://modelcontextprotocol.io/specification/2025-11-25" target="_blank" rel="noopener noreferrer">modelcontextprotocol.io/specification</a></li>
       <li class="reference-item">Google Agent2Agent protocol announcement and ecosystem context: <a href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/" target="_blank" rel="noopener noreferrer">developers.googleblog.com/a2a</a></li>
       <li class="reference-item">NIST AI RMF Generative AI Profile (NIST AI 600-1): <a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence" target="_blank" rel="noopener noreferrer">nist.gov/publications/ai-rmf-generative-ai-profile</a></li>
       <li class="reference-item">NIST AI RMF Playbook (Govern/Map/Measure/Manage guidance): <a href="https://airc.nist.gov/airmf-resources/playbook/" target="_blank" rel="noopener noreferrer">airc.nist.gov/airmf-resources/playbook</a></li>
@@ -1843,6 +2901,15 @@
       <li class="reference-item">OpenTelemetry trace concepts and context propagation: <a href="https://opentelemetry.io/docs/concepts/signals/traces/" target="_blank" rel="noopener noreferrer">opentelemetry.io/docs/concepts/signals/traces</a></li>
       <li class="reference-item">ISO/IEC 42001 context and enterprise governance posture: <a href="https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-42001" target="_blank" rel="noopener noreferrer">learn.microsoft.com/compliance/iso-42001</a></li>
       <li class="reference-item">Enterprise AI data governance example (unstructured data + compliance controls): <a href="https://learn.microsoft.com/en-us/purview/ai-microsoft-purview" target="_blank" rel="noopener noreferrer">learn.microsoft.com/purview/ai-microsoft-purview</a></li>
+      <li class="reference-item">Open Policy Agent (OPA) — Policy-as-Code engine for Pillar 16 (PDP): <a href="https://www.openpolicyagent.org/docs/latest/" target="_blank" rel="noopener noreferrer">openpolicyagent.org/docs/latest</a></li>
+      <li class="reference-item">SPIFFE / SPIRE — CNCF graduated standard for universal workload identity (Pillar 10): <a href="https://spiffe.io/docs/latest/spiffe-about/" target="_blank" rel="noopener noreferrer">spiffe.io/docs/latest/spiffe-about</a></li>
+      <li class="reference-item">OAuth 2.0 Token Exchange (RFC 8693) — delegated scoped permissions for agent identity: <a href="https://datatracker.ietf.org/doc/html/rfc8693" target="_blank" rel="noopener noreferrer">datatracker.ietf.org/doc/html/rfc8693</a></li>
+      <li class="reference-item">NVIDIA NeMo Guardrails — open-source LLM safety toolkit for Pillar 17: <a href="https://github.com/NVIDIA/NeMo-Guardrails" target="_blank" rel="noopener noreferrer">github.com/NVIDIA/NeMo-Guardrails</a></li>
+      <li class="reference-item">Llama Guard (Meta) — LLM-based input/output safety classification: <a href="https://ai.meta.com/research/publications/llama-guard-llm-based-input-output-safeguard-for-human-ai-conversations/" target="_blank" rel="noopener noreferrer">ai.meta.com/research/llama-guard</a></li>
+      <li class="reference-item">Firecracker MicroVMs — sub-125ms ephemeral isolation for Pillar 11: <a href="https://firecracker-microvm.github.io/" target="_blank" rel="noopener noreferrer">firecracker-microvm.github.io</a></li>
+      <li class="reference-item">E2B Code Interpreter SDK — open-source AI agent sandboxing: <a href="https://e2b.dev/docs" target="_blank" rel="noopener noreferrer">e2b.dev/docs</a></li>
+      <li class="reference-item">Event Sourcing and CQRS architectural patterns (Martin Fowler): <a href="https://martinfowler.com/eaaDev/EventSourcing.html" target="_blank" rel="noopener noreferrer">martinfowler.com/EventSourcing</a> and <a href="https://martinfowler.com/bliki/CQRS.html" target="_blank" rel="noopener noreferrer">martinfowler.com/CQRS</a></li>
+      <li class="reference-item">MLCommons AI Safety Benchmarks — AILuminate v1.0 evaluation standard (Pillar 15): <a href="https://mlcommons.org/benchmarks/ai-safety/" target="_blank" rel="noopener noreferrer">mlcommons.org/benchmarks/ai-safety</a></li>
     </ul>
   </section>
 
@@ -1856,7 +2923,7 @@
     <div class="footer-logo">Taam Ja' LLC</div>
     <div class="footer-tag">Deep Learning For Humans &nbsp;·&nbsp; taamja.ai</div>
     <div class="footer-meta">
-      AI OS Architecture Reference v2.0 &nbsp;·&nbsp; 15 Pillars &nbsp;·&nbsp; 14 Layers &nbsp;·&nbsp; Production-Oriented
+      AI OS Architecture Reference v4.0 &nbsp;·&nbsp; 7-Layer Canonical Stack &nbsp;·&nbsp; 18 Pillars (12 Core + 6 Modular) &nbsp;·&nbsp; Identity-Rooted &nbsp;·&nbsp; Composable
     </div>
     <div class="footer-copy">
       &copy; 2024&ndash;2026 Taam Ja&#39; LLC. All rights reserved.
